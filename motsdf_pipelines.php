@@ -29,11 +29,11 @@ function motsdf_editer_contenu_objet($flux){
 
 	// Regarder si la table correspondant à l'objet en cours figure dans les tables liées de groupes de mots
 	// todo : aller chercher ces infos dans la future configuration du plugin ?
-	$groupes = sql_allfetsel('id_groupe, titre, unseul, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (is_array($groupes) AND count($groupes) > 0) {
 		foreach ($groupes as $groupe) {
-			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'unseul' => $groupe['unseul'], 'obligatoire' => $groupe['obligatoire'], 'id_objet' => $id_objet, 'objet' => $objet));
+			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet));
 			$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 		}
 	}
@@ -42,26 +42,33 @@ function motsdf_editer_contenu_objet($flux){
 
 
 /**
- * Gérer l'ajout ou la suppression des mots-clés depuis le formulaire d'edition de l'objet
+ * Gérer Ajout et/ou Suppression des mots-clés dans le formulaire d'edition de l'objet
  * 
- * @pipeline editer_contenu_objet
+ * @pipeline formulaire_traiter
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/ 
-function motsdf_post_edition($flux) {
+function motsdf_formulaire_traiter($flux) {
+	$form = $flux['args']['form'];
+	
+	if (strncmp($form, 'editer_', 7) !== 0) {
+		return $flux;
+	}
+	
+	$objet = substr($form, 7);
+	$table_objet = table_objet($objet);
 
-	$table_objet = $flux['args']['table_objet'];
 	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
-	if (is_array($groupes) AND count($groupes) > 0 AND $flux['args']['action'] == 'modifier') {
+	if (is_array($groupes) AND count($groupes) > 0) {
 		include_spip('action/editer_mot');
 		include_spip('spip_bonux_fonctions');
 
-		$id_objet = $flux['args']['id_objet'];
-		$type_objet = $flux['args']['type'];
+		$id_objet = $flux['args']['args']['0'];
+
 
 		// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
-		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($type_objet));
+		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
 
 		foreach ($groupes as $groupe) {
 			$champ = slugify($groupe['titre']);
@@ -69,7 +76,7 @@ function motsdf_post_edition($flux) {
 
 			if (is_array($categories) AND count($categories) > 0) {
 				foreach ($categories as $value) {
-					mot_associer($value, array($type_objet => $id_objet));
+					mot_associer($value, array($objet => $id_objet));
 				}
 			}
 		}
