@@ -12,8 +12,8 @@ Après quelques tests avec des utilisateurs, je me suis rendu compte que parfois
 
 Ce plugin propose la solution suivante : afficher la liste **dans** le mode EDITION du formulaire. Là, impossible de le rater
 
-Le composant de sélection de mots-clés du mode VUE d'un objet éditorial devient alors un raccourci pratique pour 
-* voir rapidement le lesmots clés associés,
+Le composant natif de SPIP de sélection de mots-clés du mode VUE d'un objet éditorial devient alors un raccourci pratique pour 
+* voir rapidement le/les mots clés associés,
 * les modifier (ajouter, enlever)
 
 ## Configuration
