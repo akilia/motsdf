@@ -1,4 +1,5 @@
-# Plugin motsdf pour SPIP <small>motsdf = Mots Dans Formulaires</small>
+# Plugin motsdf pour SPIP
+motsdf = Mots Dans Formulaires
 
 ## Objectif
 Ce plugin a pour vocation de répondre à un besoin UX lors de l’édition d’un objet éditorial.
@@ -32,5 +33,5 @@ Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL
 **function objet_correspondance_association($objet, $id_objet, $type_objet_liens, $liaisons_demandees)**
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
 
-##TODO's
+## TODO's
 rendre compatible ce plugin avec Motus (et autres ?)
