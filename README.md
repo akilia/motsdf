@@ -2,19 +2,18 @@
 motsdf = Mots Dans Formulaires
 
 ## Objectif
-Permettre en quelques clics de faire apparaitre les mot-clés d'un groupe (de mots-clés) dans le mode ÉDITION d’un formulaire en particulier.
+Permettre en quelques clics de faire apparaitre un groupe de mots-clés dans le mode ÉDITION d’un formulaire en particulier.
 L'affichage de cette liste des mots-clés peut prendre deux formes au choix : checkbox ou boutons radio.
 
 
 ## Pourquoi ce besoin ?
-En l'état, SPIP n'affiche un groupe de mots-clés que dans le mode VUE d'un objet éditorial.
+En l'état, SPIP gère la liaison de mots-clés à un objet éditorial dans le mode VUE de cet objet.
+
 Après quelques tests avec des utilisateurs, je me suis rendu compte que parfois (souvent ?), la saisie de ces mots-clés n'était pas prise en compte par le rédacteur.
 
-Ce plugin propose la solution suivante : afficher la liste **dans** le mode EDITION du formulaire. Là, impossible de le rater
+Ce plugin propose la solution suivante : gèrer la liaison de mots-clés directement dans le mode EDITION du formulaire. Là, impossible de le rater
 
-Le composant natif de SPIP de sélection de mots-clés du mode VUE d'un objet éditorial devient alors un raccourci pratique pour 
-* voir rapidement le/les mots clés associés,
-* les modifier (ajouter, enlever)
+La gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés sans avoir à passer par le mode EDITION.
 
 ## Configuration
 ### Afficher le groupe de mots dans le formulaire
