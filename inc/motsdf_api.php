@@ -63,6 +63,8 @@ function motsdf_liste_mots($id_groupe, $defaut = null) {
  */
 function objet_correspondance_association($objet, $id_objet, $type_objet_liens, $liaisons_demandees) {
 
+	include_spip('action/editer_liens');
+	
 	/* récupérer les associations existantes avant modif */
 	// la table de liaison
 	$liaison = objet_associable($type_objet_liens);
