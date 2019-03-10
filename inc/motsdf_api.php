@@ -19,7 +19,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * @example
  *  [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL{4}|motsdf_liste_mots)]})]
  * 
- *
+ * @api
  * @param int id_groupe
  *		Clé des arguments. En absence utilise l'argument
  *
@@ -32,6 +32,7 @@ function motsdf_liste_mots($id_groupe, $defaut = null) {
 	if (!is_null($defaut)) {
 		$liste_mots = array('' => $defaut);
 	}
+
 	$res = sql_allfetsel('id_mot, titre', 'spip_mots', 'id_groupe='.intval($id_groupe));
 	foreach ($res as $value) {
 		$add_mots[$value['id_mot']] = $value['titre'];
@@ -46,12 +47,13 @@ function motsdf_liste_mots($id_groupe, $defaut = null) {
  * Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire
  *
  * @example
- *     ```
+ *     '''
  *		count(_request('secteurs_activite')) > 0 ? $liste_mots_coches = _request('secteurs_activite') : $liste_mots_coches = array();
-		$liste_mots_coches = array_filter($liste_mots_coches);
+ *		$liste_mots_coches = array_filter($liste_mots_coches);
  *      objet_correspondance_association('article', $id_article, 'mot', $liste_mots_coches);
- *     ```
+ *		'''
  *
+ * @api
  * @param string $objet
  *     type de l'objet
  * @param int $id_objet
