@@ -3,18 +3,17 @@
 (#VAL{mots}|motsdf_test_rang_actif|non) #SET{par, #ENV{par, titre}}]
 
 #SET{name,#ENV{motdf/nom_groupe}|slugify}
-#SET{id, #ENV{motdf/id_groupe}}
+#SET{id_grp, #ENV{motdf/id_groupe}}
 
 [(#REM) Radio ou Checkbox ? En fonction de la configuration choisie dans le groupe de mot-clés "On ne peut sélectionner qu’un seul mot-clé à la fois dans ce groupe"]
-#SET{type_selection, #INFO_UNSEUL{groupe_mots, #ID_GROUPE}|=={oui}|?{radio,checkbox}}
-
+#SET{type_selection, #INFO_UNSEUL{groupe_mots, #GET{id_grp}}|=={oui}|?{radio,checkbox}}
+#SET{obli, #INFO_OBLIGATOIRE{groupe_mots, #GET{id_grp}}}
 
 <B_groupe_mots>
-
-<div class="editer editer-groupe">
-	<label>#ENV{motdf/nom_groupe}</label>
+<div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
+	<label>#ENV{motdf/nom_groupe}[<span class='obligatoire'>(#GET{obli}|=={oui}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</label>
 	[<span class='erreur_message'>(#ENV**{erreurs/categories_forum})</span>]
-	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id}}{par #GET{par}}>
+	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}>
 	<div class="choix choix_#ID_MOT">
 		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|motsdf_mot_select{#ENV*{motdf/id_objet}, #ENV{motdf/objet}}|oui)checked='checked']>
 		<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
