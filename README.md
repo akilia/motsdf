@@ -46,6 +46,10 @@ Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique. Un
 
 Plus d'infos sur https://contrib.spip.net/Motus
 
+### Compatibilité étendue
+Motsdf est compatible avec le plugin RANG (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
+Si vous ordonnez les mots-clés d'un groupe avec Rang, cela sera pris en compte dans l'affichage dans le formulaire.
+
 ## API supplémentaire
 Deux fonctions non liées directement à ce plugin sont présentes
 
