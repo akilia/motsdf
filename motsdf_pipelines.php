@@ -43,13 +43,48 @@ function motsdf_editer_contenu_objet($flux){
 				}
 			}
 
-			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet));
+			$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
+			//$saisie_mot = recuperer_fond('inclure/inc-mots_cles', );
+			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+
+
 			$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 		}
 	}
 	return $flux;
 }
 
+/**
+ * Vérifier si la saisie d'un mot-clé au moins est obligatoire
+ * 
+ * @pipeline formulaire_traiter
+ * @param array $flux Données du pipeline
+ * @return array      Données du pipeline
+**/ 
+function motsdf_formulaire_verifier($flux) {
+	$form = $flux['args']['form'];
+	
+	if (strncmp($form, 'editer_', 7) !== 0) {
+		return $flux;
+	}
+	$objet = substr($form, 7);
+	$table_objet = table_objet($objet);
+
+	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+
+	if (count($groupes) > 0) {
+		foreach ($groupes as $groupe) {
+			if ($groupe['obligatoire'] == 'oui') {
+				$champ = slugify($groupe['titre']);
+				$categories = _request($champ);
+				if (!$categories) {
+					$flux['data']['categories_forum'] = 'Vous devez saisir un choix';
+				}
+			}
+		}
+	}
+	return $flux;
+}
 
 /**
  * Gérer Ajout et/ou Suppression des mots-clés dans le formulaire d'edition de l'objet
