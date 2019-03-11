@@ -122,6 +122,8 @@ function motsdf_formulaire_traiter($flux) {
 				foreach ($categories as $value) {
 					mot_associer($value, array($objet => $id_objet));
 				}
+			} else { // c'est un bouton radio
+				mot_associer($categories, array($objet => $id_objet));
 			}
 		}
 	}
