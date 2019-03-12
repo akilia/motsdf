@@ -86,46 +86,42 @@ function motsdf_formulaire_verifier($flux) {
 	return $flux;
 }
 
+
 /**
  * Gérer Ajout et/ou Suppression des mots-clés dans le formulaire d'edition de l'objet
  * 
- * @pipeline formulaire_traiter
+ * @pipeline post_edition
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/ 
-function motsdf_formulaire_traiter($flux) {
-	$form = $flux['args']['form'];
-	
-	if (strncmp($form, 'editer_', 7) !== 0) {
-		return $flux;
-	}
-	
-	$objet = substr($form, 7);
-	$table_objet = table_objet($objet);
+function motsdf_post_edition($flux) {
 
-	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+	if (isset($flux['args']['table']) and $flux['args']['action'] == 'modifier') {
+		$table_objet = $flux['args']['table_objet'];
+		$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
-	if (count($groupes) > 0) {
-		include_spip('action/editer_mot');
-		include_spip('spip_bonux_fonctions');
+		if (count($groupes) > 0) {
+			include_spip('action/editer_mot');
+			include_spip('spip_bonux_fonctions');
+			
+			$id_objet = $flux['args']['id_objet'];
+			$objet = $flux['args']['type'];
 
-		$id_objet = $flux['args']['args']['0'];
+			// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
+			sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
 
-		// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
-		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
+			foreach ($groupes as $groupe) {
+				$champ = slugify($groupe['titre']);
+				$categories = _request($champ);
 
-		foreach ($groupes as $groupe) {
-			$champ = slugify($groupe['titre']);
-			$categories = _request($champ);
-
-			if (is_array($categories) AND count($categories) > 0) {
-				foreach ($categories as $value) {
-					mot_associer($value, array($objet => $id_objet));
+				if (is_array($categories) AND count($categories) > 0) {
+					foreach ($categories as $value) {
+						mot_associer($value, array($objet => $id_objet));
+					}
 				}
-			} else { // c'est un bouton radio
-				mot_associer($categories, array($objet => $id_objet));
 			}
 		}
 	}
+	
 	return $flux;
 }
