@@ -57,6 +57,7 @@ Retourner le tableau id_mot/titre d'un groupe de mots clés.
 Très pratique lorsque l'on utilise le plugin <a href="https://contrib.spip.net/Saisies">Saisies</a>
 
 Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL{4}|motsdf_liste_mots)]})]
+Permet d'afficher la saisie sous frome de Checkbox du groupe de mot-clés N°4 (id_groupe=4)
 
 ### function objet_correspondance_association($objet, $id_objet, $type_objet_liens, $liaisons_demandees)
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
