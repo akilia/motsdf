@@ -73,6 +73,19 @@ function motsdf_formulaire_verifier($flux) {
 	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
+		if (test_plugin_actif('motus')) {
+			$table_objet_sql = table_objet_sql($table_objet);
+			$id_table_objet = id_table_objet($table_objet);
+
+			$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args'['0']]));
+			$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+
+			// si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
+			if (!$id_parent or !motus_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))) {
+				return $flux;
+			}
+		}
+
 		foreach ($groupes as $groupe) {
 			if ($groupe['obligatoire'] == 'oui') {
 				$champ = slugify($groupe['titre']);
