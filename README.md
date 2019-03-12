@@ -22,9 +22,7 @@ SPIP >= 3.2
 Plugin Saisies (pris en compte automatiquement à l'installation)
 
 ### Configuration
-**Motsdf** exploite uniquement les options de configuration qui se trouvent déjà nativement dans le formulaire d'édition d'un groupe de mots-clés.
-
-Voir **Édition -> Mots-clés**
+*Motsdf* exploite uniquement les options de configuration qui se trouvent déjà nativement dans le formulaire d'édition d'un groupe de mots-clés. Voir *Édition -> Mots-clés*
 
 #### Afficher le groupe de mots dans le formulaire
 Lors de la création d'un nouveau groupe de mots-clés, dans le champ "Les mots-clés de ce groupe peuvent être associés :", cocher la case correspondant à l'objet éditorial dans lequel vous voulez voir apparaitre ce groupe. 
