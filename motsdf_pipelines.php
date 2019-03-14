@@ -32,20 +32,18 @@ function motsdf_editer_contenu_objet($flux){
 	if (count($groupes) > 0) {
 
 		foreach ($groupes as $groupe) {
-			// Compatibilité avec le puglin Motus : si actif on récupère aussi la liste des rubriques restreintes
+			// Compatibilité avec le puglin Motus : si actif on regarde si il y a des restrictions et si oui, si elles s'appliquent 
 			if (test_plugin_actif('motus')) {
-				include_spip('motus_autorisation');
-				$id_parent = $flux['args']['contexte']['id_parent'];
 				$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
 
-				// si on n'est pas dans un contxexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
-				if (!$id_parent or !motus_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))) {
+				// si on est pas autoriser à montrer ce groupe pour cet objet, on sort
+				if (!motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, $objet, $id_objet, session_get('id_auteur'))) {
 					return $flux;
 				}
 			}
 
+			// sinon, on ajoute la saisie du ou des groupes de mots clés
 			$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-			//$saisie_mot = recuperer_fond('inclure/inc-mots_cles', );
 			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
 
@@ -75,15 +73,27 @@ function motsdf_formulaire_verifier($flux) {
 
 	if (count($groupes) > 0) {
 		if (test_plugin_actif('motus')) {
-			include_spip('motus_autorisation');
-			$table_objet_sql = table_objet_sql($table_objet);
-			$id_table_objet = id_table_objet($table_objet);
+			
+			$trouver_table = charger_fonction('trouver_table', 'base');
+			$desc = $trouver_table($table_objet);
 
-			$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args'['0']]));
+			if ($desc and isset($desc['field']['id_rubrique'])) {
+				if (is_numeric($flux['args']['args']['1'])) {
+					$id_parent = intval($flux['args']['args']['1']);
+				} else {
+					$table_objet_sql = table_objet_sql($table_objet);
+					$id_table_objet  = id_table_objet($table_objet);
+					$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args']['0']));
+				}
+			}
+			
 			$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
 
 			// si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
-			if (!$id_parent or !motus_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))) {
+			if (
+				!$id_parent 
+				or !motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))
+			) {
 				return $flux;
 			}
 		}
@@ -140,3 +150,48 @@ function motsdf_post_edition($flux) {
 	
 	return $flux;
 }
+
+/**
+ * Fonction interne
+ * Retourne vrai si une selection de rubrique s'applique à cet objet
+ * 
+ * Autrement dit, si l'objet appartient à une des rubriques données
+ *  
+ * @param string $restrictions
+ *     Liste des restrictions issues d'une selection avec le selecteur generique (rubrique|3)
+ * @param string $objet
+ *     Objet sur lequel on teste l'appartenance a une des rubriques (article)
+ * @param int $id_objet
+ *     Identifiant de l'objet.
+ * @param int $qui
+ *     De qui teste t'on l'autorisation.
+ * @return bool
+**/
+function motsdf_autoriser_groupe_si_selection_rubrique($restrictions, $objet, $id_objet, $qui) {
+	// si restriction a une rubrique...
+	include_spip('formulaires/selecteur/generique_fonctions');
+	if ($rubs = picker_selected($restrictions, 'rubrique')) {
+
+		// trouver la rubrique de l'objet en question
+		if ($objet != 'rubrique') {
+
+			$trouver_table = charger_fonction('trouver_table', 'base');
+			$desc = $trouver_table( table_objet($objet) );
+
+			if ($desc and isset($desc['field']['id_rubrique'])) {
+				$table = table_objet_sql($objet);
+				$id_rub = sql_getfetsel('id_rubrique', $table, id_table_objet($table) . '=' . intval($id_objet));
+			}
+		} else {
+			$id_rub = $id_objet;
+		}
+		$opt = array();
+		$opt['rubriques_on'] = $rubs;
+		// ici on sait dans quelle rubrique est notre objet ($id_rub)
+		// et on connait la liste des rubriques acceptées ($opt['rubriques_on'])
+		return autoriser('dansrubrique', 'groupemots', $id_rub, $qui, $opt);
+	}
+
+	return true;
+}
+
