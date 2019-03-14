@@ -34,6 +34,7 @@ function motsdf_editer_contenu_objet($flux){
 		foreach ($groupes as $groupe) {
 			// Compatibilité avec le puglin Motus : si actif on récupère aussi la liste des rubriques restreintes
 			if (test_plugin_actif('motus')) {
+				include_spip('motus_autorisation');
 				$id_parent = $flux['args']['contexte']['id_parent'];
 				$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
 
@@ -74,6 +75,7 @@ function motsdf_formulaire_verifier($flux) {
 
 	if (count($groupes) > 0) {
 		if (test_plugin_actif('motus')) {
+			include_spip('motus_autorisation');
 			$table_objet_sql = table_objet_sql($table_objet);
 			$id_table_objet = id_table_objet($table_objet);
 
