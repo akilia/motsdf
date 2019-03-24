@@ -170,6 +170,7 @@ function motsdf_post_edition($flux) {
 function motsdf_autoriser_groupe_si_selection_rubrique($restrictions, $objet, $id_objet, $qui) {
 	// si restriction a une rubrique...
 	include_spip('formulaires/selecteur/generique_fonctions');
+	include_spip('inc/autoriser');
 	if ($rubs = picker_selected($restrictions, 'rubrique')) {
 
 		// trouver la rubrique de l'objet en question
