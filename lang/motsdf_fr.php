@@ -9,4 +9,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// M
 	'motsdf_titre' => 'Mots dans formulaires',
+
+	// S
+	'saisir_choix' => 'Vous devez saisir un choix',
 );

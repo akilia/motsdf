@@ -66,6 +66,7 @@ function motsdf_editer_contenu_objet($flux){
 	return $flux;
 }
 
+
 /**
  * Vérifier si la saisie d'un mot-clé au moins est obligatoire
  * 
@@ -87,39 +88,46 @@ function motsdf_formulaire_verifier($flux) {
 	if (count($groupes) > 0) {
 		// Compatibilité avec le puglin Motus : si actif et si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
 		if (test_plugin_actif('motus')) {
+
 			$trouver_table = charger_fonction('trouver_table', 'base');
 			$desc = $trouver_table($table_objet);
 
 			if ($desc and isset($desc['field']['id_rubrique'])) {
-				// si c'est une creation, l'id_rubrique est déjà dans le contexte
+				// contaxte : si c'est une creation, l'id_rubrique est déjà dans le contexte
 				if (is_numeric($flux['args']['args']['1'])) {
 					$id_parent = intval($flux['args']['args']['1']);
 				}
-				// sinon, on le retrouve à partir de l'id_objet
+				// sinon, on retrouve l'id_rubrique à partir de l'id_objet
 				else {
 					$table_objet_sql = table_objet_sql($table_objet);
 					$id_table_objet  = id_table_objet($table_objet);
 					$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args']['0']));
 				}
 			}
-			
-			$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
 
-			// on test le tout
-			if (
-				!$id_parent 
-				or !motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))
-			) {
-				return $flux;
+			// On a les infos de contexte : on peut maintenant vérifier pour chaque groupe ce qu'il en est
+			foreach ($groupes as $groupe) {
+				$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+				if (motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur')) 
+					and $groupe['obligatoire'] == 'oui') {
+					$champ = slugify($groupe['titre']);
+					$categories = _request($champ);
+
+					if (!$categories) {
+						$flux['data'][$champ] = _T('motsdf:saisir_choix');
+					}
+				}
 			}
 		}
 
-		foreach ($groupes as $groupe) {
-			if ($groupe['obligatoire'] == 'oui') {
-				$champ = slugify($groupe['titre']);
-				$categories = _request($champ);
-				if (!$categories) {
-					$flux['data']['categories_forum'] = 'Vous devez saisir un choix';
+		else {
+			foreach ($groupes as $groupe) {
+				if ($groupe['obligatoire'] == 'oui') {
+					$champ = slugify($groupe['titre']);
+					$categories = _request($champ);
+					if (!$categories) {
+						$flux['data']['categories_forum'] = _T('motsdf:saisir_choix');
+					}
 				}
 			}
 		}
