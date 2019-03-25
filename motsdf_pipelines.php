@@ -67,6 +67,45 @@ function motsdf_editer_contenu_objet($flux){
 }
 
 
+
+/**
+ * Charger les mots-clés
+ * 
+ * @pipeline formulaire_traiter
+ * @param array $flux Données du pipeline
+ * @return array      Données du pipeline
+**/ 
+function motsdf_formulaire_charger($flux) {
+	$form = $flux['args']['form'];
+
+	if (strncmp($form, 'editer_', 7) !== 0) {
+		return $flux;
+	}
+
+	$objet = substr($form, 7);
+	$table_objet = table_objet($objet);
+	$id_objet = $flux['args']['args'][0];
+
+	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+
+	if (count($groupes) > 0) {
+		if (is_numeric($id_objet)) { // c'est une modification. On va chercher les valeurs dans la BdD
+			foreach ($groupes as $groupe) {
+				$champ = slugify($groupe['titre']);
+				$liste = sql_allfetsel('M.id_mot', 'spip_mots AS M JOIN spip_mots_liens AS L ON M.id_mot=L.id_mot', "M.id_groupe=".intval($groupe['id_groupe'])." AND L.objet='$objet' AND L.id_objet=".intval($id_objet));
+				$flux['data'][$champ] = array_column($liste, 'id_mot');
+			}
+		} else { // c'est une création (id_objet = 'new/oui'). On récupère les valeurs si elles sont postées (retour de la fonction verifier() par ex.)
+			foreach ($groupes as $groupe) {
+				$champ = slugify($groupe['titre']);
+				$flux['data'][$champ] = _request($champ);
+			}
+		}
+	}
+	return $flux;
+
+}
+
 /**
  * Vérifier si la saisie d'un mot-clé au moins est obligatoire
  * 

@@ -16,7 +16,7 @@
 	[<span class='erreur_message'>(#ENV**{erreurs/#GET{name}})</span>]
 	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}>
 	<div class="choix choix_#ID_MOT">
-		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|motsdf_mot_select{#ENV*{motdf/id_objet}, #ENV{motdf/objet}}|oui)checked='checked']>
+		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
 		<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
 	</div>
 	</BOUCLE_groupe_mots>

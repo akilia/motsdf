@@ -15,23 +15,6 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 include_spip('inc/motsdf_api');
 
-/**
- * Vérifier que le mot-clé est associé
- *
- * @param int $id_mot
- * 
- * @param int $id_objet
- * 
- * @return bool
- *     true si le mot clé est associé
-**/
-function motsdf_mot_select($id_mot, $id_objet, $objet){
-	$id_mot = intval($id_mot);
-	$id_objet = intval($id_objet);
-	$res = sql_countsel('spip_mots_liens', array("id_mot=$id_mot", "id_objet=$id_objet", "objet=".sql_quote($objet)));
-	if ($res > 0 ) return true;
-	else return false;
-}
 
 /**
  * Vérifier si le plugin rang est actif et si oui, qu'il a ete active sur les mots cles
