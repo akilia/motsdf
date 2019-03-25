@@ -14,7 +14,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 /**
- * Insérer la saisie des mots-clés dans le formulaire de l’objet
+ * Insérer la saisie du groupe de mots dans le formulaire de l’objet
  * 
  * @pipeline editer_contenu_objet
  * @param array $flux Données du pipeline
@@ -26,28 +26,41 @@ function motsdf_editer_contenu_objet($flux){
 	$objet = $flux['args']['type'];
 	$table_objet = table_objet($objet);
 
-	// Regarder si la table correspondant à l'objet en cours figure dans les tables liées de groupes de mots
+	// Recupérer les groupes de mots si la table correspondant à l'objet figure dans les tables liées de groupes de mots
 	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
+		
+		// Compatibilité avec le puglin Motus : si actif on regarde si il y a des restrictions et si oui, si elles s'appliquent 
+		if (test_plugin_actif('motus')) {
+			$trouver_table = charger_fonction('trouver_table', 'base');
+			$desc = $trouver_table($table_objet); // ici peut être plutot utiliser declarer_parent ?
 
-		foreach ($groupes as $groupe) {
-			// Compatibilité avec le puglin Motus : si actif on regarde si il y a des restrictions et si oui, si elles s'appliquent 
-			if (test_plugin_actif('motus')) {
-				$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+			// si l'objet à bien pour parent une rubrique
+			if ($desc and isset($desc['field']['id_rubrique'])) {
 
-				// si on est pas autoriser à montrer ce groupe pour cet objet, on sort
-				if (!motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, $objet, $id_objet, session_get('id_auteur'))) {
-					return $flux;
+				foreach ($groupes as $groupe) {
+					$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+					$id_rubrique = $flux['args']['contexte']['id_parent'];
+
+					if (motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_rubrique, session_get('id_auteur'))) {
+						$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
+						$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+
+						$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
+					}
 				}
 			}
+		}
+		// Plugin Motus pas actif : on ajoute le groupe de mots
+		else {
+			foreach ($groupes as $groupe) {
+				// sinon, on ajoute la saisie du ou des groupes de mots clés
+				$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
+				$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
-			// sinon, on ajoute la saisie du ou des groupes de mots clés
-			$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-			$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
-
-
-			$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
+				$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
+			}
 		}
 	}
 	return $flux;
@@ -72,15 +85,18 @@ function motsdf_formulaire_verifier($flux) {
 	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
+		// Compatibilité avec le puglin Motus : si actif et si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
 		if (test_plugin_actif('motus')) {
-			
 			$trouver_table = charger_fonction('trouver_table', 'base');
 			$desc = $trouver_table($table_objet);
 
 			if ($desc and isset($desc['field']['id_rubrique'])) {
+				// si c'est une creation, l'id_rubrique est déjà dans le contexte
 				if (is_numeric($flux['args']['args']['1'])) {
 					$id_parent = intval($flux['args']['args']['1']);
-				} else {
+				}
+				// sinon, on le retrouve à partir de l'id_objet
+				else {
 					$table_objet_sql = table_objet_sql($table_objet);
 					$id_table_objet  = id_table_objet($table_objet);
 					$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args']['0']));
@@ -89,7 +105,7 @@ function motsdf_formulaire_verifier($flux) {
 			
 			$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
 
-			// si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
+			// on test le tout
 			if (
 				!$id_parent 
 				or !motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur'))
@@ -192,7 +208,6 @@ function motsdf_autoriser_groupe_si_selection_rubrique($restrictions, $objet, $i
 		// et on connait la liste des rubriques acceptées ($opt['rubriques_on'])
 		return autoriser('dansrubrique', 'groupemots', $id_rub, $qui, $opt);
 	}
-
-	return true;
+	return false;
 }
 
