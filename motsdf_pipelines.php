@@ -178,34 +178,38 @@ function motsdf_formulaire_verifier($flux) {
 /**
  * Gérer Ajout et/ou Suppression des mots-clés dans le formulaire d'edition de l'objet
  * 
- * @pipeline post_edition
+ * @pipeline formulaire_traiter
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/ 
-function motsdf_post_edition($flux) {
+function motsdf_formulaire_traiter($flux) {
+	$form = $flux['args']['form'];
+	
+	if (strncmp($form, 'editer_', 7) !== 0) {
+		return $flux;
+	}
 
-	if (isset($flux['args']['table']) and $flux['args']['action'] == 'modifier') {
-		$table_objet = $flux['args']['table_objet'];
-		$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+	$objet = substr($form, 7);
+	$table_objet = table_objet($objet);
+	$id_objet = $flux['args']['args']['0'];
 
-		if (count($groupes) > 0) {
-			include_spip('action/editer_mot');
-			include_spip('spip_bonux_fonctions');
-			
-			$id_objet = $flux['args']['id_objet'];
-			$objet = $flux['args']['type'];
+	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
-			// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
-			sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
 
-			foreach ($groupes as $groupe) {
-				$champ = slugify($groupe['titre']);
-				$categories = _request($champ);
+	if (count($groupes) > 0) {
+		include_spip('action/editer_mot');
+		include_spip('spip_bonux_fonctions');
 
-				if (is_array($categories) AND count($categories) > 0) {
-					foreach ($categories as $value) {
-						mot_associer($value, array($objet => $id_objet));
-					}
+		// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
+		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
+
+		foreach ($groupes as $groupe) {
+			$champ = slugify($groupe['titre']);
+			$categories = _request($champ);
+
+			if (is_array($categories) AND count($categories) > 0) {
+				foreach ($categories as $value) {
+					mot_associer($value, array($objet => $id_objet));
 				}
 			}
 		}

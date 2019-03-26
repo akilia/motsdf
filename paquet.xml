@@ -1,7 +1,7 @@
 <paquet
 	prefix="motsdf"
 	categorie="navigation"
-	version="0.2.8"
+	version="0.2.9"
 	etat="dev"
 	compatibilite="[3.2.1;3.2.*]"
 	logo="prive/themes/spip/images/motsdf-64.png"
@@ -27,6 +27,6 @@
 	<pipeline nom="editer_contenu_objet" inclure="motsdf_pipelines.php" /> 
 	<pipeline nom="formulaire_charger" inclure="motsdf_pipelines.php" /> 
 	<pipeline nom="formulaire_verifier" inclure="motsdf_pipelines.php" /> 
-	<pipeline nom="post_edition" inclure="motsdf_pipelines.php" /> 
+	<pipeline nom="formulaire_traiter" inclure="motsdf_pipelines.php" /> 
 
 </paquet>
