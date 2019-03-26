@@ -9,14 +9,15 @@ Afficher les mots-clés d'un groupe dans le mode ÉDITION d’un formulaire d'ob
 
 ### Amélioration UX du Back-office
 En l'état, SPIP gère la liaison de mots-clés à un objet éditorial dans le mode VUE de cet objet.
-Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un rédacteur occasionel.
+Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un·e rédacteur·rice occasionel.
 
 Ce plugin propose de gèrer la liaison de mots-clés directement dans le mode EDITION du formulaire. Là, difficile de le rater.
-La gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés (i.e. sans avoir à passer par le mode EDITION).
+
+Note : la gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés (i.e. sans avoir à passer par le mode EDITION).
 
 ### Utile pour un affichage publique de votre formulaire
-Comme le dit la documentation de SPIP.net, il est possible d'utiliser dans les pages publiques les formulaires de l’espace privé : formulaire article, breve, etc. (voir https://www.spip.net/fr_article3788.html)
-Mais si vous liez un groupe de mots-clés aux articles, il n'apparaitra pas dans le formulaire article dans la partie publique.
+Comme le dit la documentation de SPIP.net, il est possible d'utiliser dans les pages publiques les formulaires de l’espace privé : formulaire article, brève, etc. (voir https://www.spip.net/fr_article3788.html)
+Mais si, par exemple, vous liez un groupe de mots-clés aux articles, il n'apparaitra pas dans l'édition de l'article dans la partie publique.
 Sauf si vous utilisez Motsdf.
 
 ## Prérequis et Configuration
