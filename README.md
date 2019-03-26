@@ -25,7 +25,7 @@ Sauf si vous utilisez Motsdf.
 ### Prérequis
 SPIP >= 3.2
 
-Plugin Saisies (pris en compte automatiquement à l'installation)
+Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 
 ### Configuration
 *Motsdf* exploite uniquement les options de configuration qui se trouvent déjà nativement dans le formulaire d'édition d'un groupe de mots-clés. Voir *Édition -> Mots-clés*
