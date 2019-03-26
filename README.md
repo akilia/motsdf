@@ -6,13 +6,18 @@ Afficher les mots-clés d'un groupe dans le mode ÉDITION d’un formulaire d'ob
 
 
 ## Pourquoi ce besoin ?
+
+### Amélioration UX du Back-office
 En l'état, SPIP gère la liaison de mots-clés à un objet éditorial dans le mode VUE de cet objet.
-Après quelques tests utilisateurs, on se rend compte que cette dichotomie n'est pas toujours évidente pour un rédacteur occasionel.
+Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un rédacteur occasionel.
 
 Ce plugin propose de gèrer la liaison de mots-clés directement dans le mode EDITION du formulaire. Là, difficile de le rater.
-
 La gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés (i.e. sans avoir à passer par le mode EDITION).
 
+### Utile pour un affichage publique de votre formulaire
+Comme le dit la documentation de SPIP.net, il est possible d'utiliser dans les pages publiques les formulaires de l’espace privé : formulaire article, breve, etc. (voir https://www.spip.net/fr_article3788.html)
+Mais si vous liez un groupe de mots-clés aux articles, il n'apparaitra pas dans le formulaire article dans la partie publique.
+Sauf si vous utilisez Motsdf.
 
 ## Prérequis et Configuration
 
@@ -40,7 +45,9 @@ Pour rendre la saisie obligatoire, choisissez l'option "*Groupe important : il e
 
 
 #### Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)
-Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique. Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
+Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique. Et ce plugin Motus, je ne saurais trop vous le recommander ! 
+
+Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
 
 Plus d'infos sur https://contrib.spip.net/Motus
 
