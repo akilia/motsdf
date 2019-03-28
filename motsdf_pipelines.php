@@ -33,7 +33,6 @@ function motsdf_editer_contenu_objet($flux){
 		
 		// Compatibilité avec le puglin Motus : si actif on regarde si il y a des restrictions et si oui, si elles s'appliquent 
 		if (test_plugin_actif('motus')) {
-			include_spip('motus_autorisations');
 			$trouver_table = charger_fonction('trouver_table', 'base');
 			$desc = $trouver_table($table_objet); // ici peut être plutot utiliser declarer_parent ?
 
@@ -41,10 +40,11 @@ function motsdf_editer_contenu_objet($flux){
 			if ($desc and isset($desc['field']['id_rubrique'])) {
 
 				foreach ($groupes as $groupe) {
-					$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+					$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+					$opt['rubriques_on'] = picker_selected($restrictions, 'rubrique');
 					$id_rubrique = $flux['args']['contexte']['id_parent'];
 
-					if (motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_rubrique, session_get('id_auteur'))) {
+					if (autoriser('dansrubrique', 'groupemots', $id_rubrique, session_get('id_auteur'), $opt) ) {
 						$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
 						$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
@@ -147,8 +147,9 @@ function motsdf_formulaire_verifier($flux) {
 
 			// On a les infos de contexte : on peut maintenant vérifier pour chaque groupe ce qu'il en est
 			foreach ($groupes as $groupe) {
-				$rubriques_ok = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
-				if (motsdf_autoriser_groupe_si_selection_rubrique($rubriques_ok, 'rubrique', $id_parent, session_get('id_auteur')) 
+				$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+				$opt['rubriques_on'] = picker_selected($restrictions, 'rubrique');
+				if (autoriser('dansrubrique', 'groupemots', $id_parent, session_get('id_auteur'), $opt) 
 					and $groupe['obligatoire'] == 'oui') {
 					$champ = slugify($groupe['titre']);
 					$categories = _request($champ);
