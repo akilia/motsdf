@@ -33,6 +33,7 @@ function motsdf_editer_contenu_objet($flux){
 		
 		// Compatibilité avec le puglin Motus : si actif on regarde si il y a des restrictions et si oui, si elles s'appliquent 
 		if (test_plugin_actif('motus')) {
+			include_spip('motus_autorisations');
 			$trouver_table = charger_fonction('trouver_table', 'base');
 			$desc = $trouver_table($table_objet); // ici peut être plutot utiliser declarer_parent ?
 
