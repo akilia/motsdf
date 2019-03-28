@@ -71,4 +71,9 @@ Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
 
 ## TODO
-Trouver une solution pour shunter l'affichage dans le formulaire pour des cas particuliers.
+### Cache Ajax dans le back-office
+Pouvoir le shunter ! En efet si on supprime ou ajoute un mot-clé depuis la VUE, puis que l'on passe en mode EDITION, alors on ne voit pas les modifications. Il faut recharger la page pour voir les modifs apparaître.
+
+### Autoriser des visiteurs à voir/editer les mots-clés
+Dans le cas d'un forum ouvert au public.
+Si cela devient possible, alors utiliser les fonctions d'autorisations dans les tests fait dans le code (pipelines editer_contenu_objet() et formulaire_verifier())
