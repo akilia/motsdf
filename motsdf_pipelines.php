@@ -42,10 +42,13 @@ function motsdf_editer_contenu_objet($flux){
 
 				foreach ($groupes as $groupe) {
 					$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
-					$opt['rubriques_on'] = picker_selected($restrictions, 'rubrique');
+					$rubs = picker_selected($restrictions, 'rubrique');
 					$id_rubrique = $flux['args']['contexte']['id_parent'];
 
-					if (autoriser('dansrubrique', 'groupemots', $id_rubrique, session_get('id_auteur'), $opt) ) {
+					// dans l'idéal, il faudarit faire ça : autoriser('dansrubrique', 'groupemots', $id_rubrique, session_get('id_auteur'), $opt)
+					// Mais il faudrait alors pourvoir aussi autoriser les visiteurs à voir les mots-clés
+
+					if (!$restrictions or in_array($id_rubrique, $rubs)) {
 						$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
 						$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
@@ -149,8 +152,8 @@ function motsdf_formulaire_verifier($flux) {
 			// On a les infos de contexte : on peut maintenant vérifier pour chaque groupe ce qu'il en est
 			foreach ($groupes as $groupe) {
 				$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
-				$opt['rubriques_on'] = picker_selected($restrictions, 'rubrique');
-				if (autoriser('dansrubrique', 'groupemots', $id_parent, session_get('id_auteur'), $opt) 
+				$rubs = picker_selected($restrictions, 'rubrique');
+				if (!$restrictions or in_array($id_parent, $rubs) 
 					and $groupe['obligatoire'] == 'oui') {
 					$champ = slugify($groupe['titre']);
 					$categories = _request($champ);
@@ -220,48 +223,3 @@ function motsdf_formulaire_traiter($flux) {
 	
 	return $flux;
 }
-
-/**
- * Fonction interne : SURCHARGE depuis plugin Motus
- * Retourne vrai si une selection de rubrique s'applique à cet objet
- * 
- * Autrement dit, si l'objet appartient à une des rubriques données
- *  
- * @param string $restrictions
- *     Liste des restrictions issues d'une selection avec le selecteur generique (rubrique|3)
- * @param string $objet
- *     Objet sur lequel on teste l'appartenance a une des rubriques (article)
- * @param int $id_objet
- *     Identifiant de l'objet.
- * @param int $qui
- *     De qui teste t'on l'autorisation.
- * @return bool
-**/
-function motsdf_autoriser_groupe_si_selection_rubrique($restrictions, $objet, $id_objet, $qui) {
-	// si restriction a une rubrique...
-	include_spip('formulaires/selecteur/generique_fonctions');
-	include_spip('inc/autoriser');
-	if ($rubs = picker_selected($restrictions, 'rubrique')) {
-
-		// trouver la rubrique de l'objet en question
-		if ($objet != 'rubrique') {
-
-			$trouver_table = charger_fonction('trouver_table', 'base');
-			$desc = $trouver_table( table_objet($objet) );
-
-			if ($desc and isset($desc['field']['id_rubrique'])) {
-				$table = table_objet_sql($objet);
-				$id_rub = sql_getfetsel('id_rubrique', $table, id_table_objet($table) . '=' . intval($id_objet));
-			}
-		} else {
-			$id_rub = $id_objet;
-		}
-		$opt = array();
-		$opt['rubriques_on'] = $rubs;
-		// ici on sait dans quelle rubrique est notre objet ($id_rub)
-		// et on connait la liste des rubriques acceptées ($opt['rubriques_on'])
-		return autoriser('dansrubrique', 'groupemots', $id_rub, $qui, $opt);
-	}
-	return false;
-}
-
