@@ -1,6 +1,5 @@
 [(#REM) Compatibilité avec le plugin RANG ][
-(#VAL{mots}|motsdf_test_rang_actif|oui) #SET{par, rang}][
-(#VAL{mots}|motsdf_test_rang_actif|non) #SET{par, #ENV{par, titre}}]
+(#VAL{mots}|in_array{#RANG_LISTE_OBJETS}|?{#SET{par, rang},#SET{par, #ENV{par, titre}}})]
 
 #SET{name,#ENV{motdf/nom_groupe}|slugify}
 #SET{id_grp, #ENV{motdf/id_groupe}}
