@@ -28,24 +28,28 @@ SPIP >= 3.2
 Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 
 ### Configuration
-*Motsdf* exploite uniquement les options de configuration qui se trouvent déjà nativement dans le formulaire d'édition d'un groupe de mots-clés. Voir *Édition -> Mots-clés*
+*Motsdf* exploite uniquement les options de configuration qui se trouvent déjà nativement dans SPIP à savoir :
 
-#### Afficher le groupe de mots dans le formulaire
-Lors de la création d'un nouveau groupe de mots-clés, dans le champ "Les mots-clés de ce groupe peuvent être associés :", cocher la case correspondant à l'objet éditorial dans lequel vous voulez voir apparaitre ce groupe. 
+Dans *Configuration -> Contenu du site* vous devez avoir activez les mots-clés, mais vous pouvez aussi choisir d'utiliser la configuration avancée des groupes de mots-clés. Ce choix ouvre de nouvelles options qui sont exploitées par Motsdf (voir si dessous).
 
-#### Checkbox ou Boutons radio
+### Activation et options
+Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
+
+#### Activer l'affichage d'un groupe de mots dans tel ou tel formulaire
+Il suffit ici de chocher les cases correpondantes aux objets auxquels vous voulez associer tel ou tel groupe de mots-clés.
+
+#### Option : Checkbox ou Boutons radio
 **Prérequis** : avoir coché•e la case "Utiliser la configuration avancée des groupes de mots-clés" (voir **Configuration -> Contenu du site**, bloc Les mots-clés).
 
 Par défaut, le choix des mots clés se fait par Checkbox.
 Si vous voulez des boutons radio, choisissez l'option "*On ne peut sélectionner qu’un seul mot-clé à la fois dans ce groupe.*"
 
-#### Saisie obligatoire
+#### Option : Saisie obligatoire
 **Prérequis** : avoir coché•e la case "*Utiliser la configuration avancée des groupes de mots-clés*" (voir **Configuration -> Contenu du site**, bloc Les mots-clés).
 
 Pour rendre la saisie obligatoire, choisissez l'option "*Groupe important : il est fortement conseillé de sélectionner un mot-clé dans ce groupe.*"
 
-
-#### Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)
+#### Option : Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)
 Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique. Et ce plugin Motus, je ne saurais trop vous le recommander ! 
 
 Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
@@ -71,9 +75,16 @@ Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
 
 ## TODO
+### Option : quels status ?
+Prise en compte des choix fait sur les statuts qui peuvent attribuer des mots-clés.
+Attentio : voir le prérequis ci-dessous.
+
+### Autoriser des visiteurs / tout le monde à attribuer les mots-clés
+Cela peut être utile dans le cas d'un forum ouvert sur abonnement.
+
+Si cela devient possible, alors utiliser les fonctions d'autorisations dans les tests fait dans le code (pipelines editer_contenu_objet() et formulaire_verifier())
+
 ### Cache Ajax dans le back-office
 Pouvoir le shunter ! En efet si on supprime ou ajoute un mot-clé depuis la VUE, puis que l'on passe en mode EDITION, alors on ne voit pas les modifications. Il faut recharger la page pour voir les modifs apparaître.
 
-### Autoriser des visiteurs à voir/editer les mots-clés
-Dans le cas d'un forum ouvert au public.
-Si cela devient possible, alors utiliser les fonctions d'autorisations dans les tests fait dans le code (pipelines editer_contenu_objet() et formulaire_verifier())
+
