@@ -22,7 +22,7 @@ Mais si, par exemple, vous associez un groupe de mots-clés aux articles, il n'a
 
 …sauf si vous utilisez Motsdf.
 
-## Prérequis et Configuration
+## Prérequis, configuration et options
 
 ### Prérequis
 SPIP >= 3.2
@@ -30,9 +30,9 @@ SPIP >= 3.2
 Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 
 ### Configuration
-*Motsdf* exploite uniquement les options de configuration qui se trouvent déjà nativement dans SPIP à savoir :
+*Motsdf* exploite uniquement les configurations qui se trouvent déjà nativement dans *Configuration -> Contenu du site*.
 
-Dans *Configuration -> Contenu du site* vous devez avoir activez les mots-clés, mais vous pouvez aussi choisir d'utiliser la configuration avancée des groupes de mots-clés. Ce choix ouvre de nouvelles options qui sont exploitées par Motsdf (voir si dessous).
+Vous devez avoir activé les mots-clés bien sûr, mais vous pouvez aussi choisir d'utiliser la configuration avancée des groupes de mots-clés. Ce choix ouvre à des options exploitées par Motsdf (voir si dessous).
 
 ### Activation et options
 Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
@@ -52,7 +52,7 @@ Si vous voulez des boutons radio, choisissez l'option "*On ne peut sélectionner
 Pour rendre la saisie obligatoire, choisissez l'option "*Groupe important : il est fortement conseillé de sélectionner un mot-clé dans ce groupe.*"
 
 #### Option : Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)(par défaut : 'aucune restriction')
-Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique. Et ce plugin Motus, je ne saurais trop vous le recommander ! 
+Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique.
 
 Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
 
