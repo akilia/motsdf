@@ -197,10 +197,10 @@ function motsdf_formulaire_traiter($flux) {
 
 	$objet = substr($form, 7);
 	$table_objet = table_objet($objet);
-	$id_objet = $flux['args']['args']['0'];
+	$id_table_objet = id_table_objet($objet);
+	$id_objet = $flux['data'][$id_table_objet];
 
 	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
-
 
 	if (count($groupes) > 0) {
 		include_spip('action/editer_mot');
@@ -215,7 +215,7 @@ function motsdf_formulaire_traiter($flux) {
 
 			if (is_array($categories) AND count($categories) > 0) {
 				foreach ($categories as $value) {
-					mot_associer($value, array($objet => $id_objet));
+					$assoc = mot_associer($value, array($objet => $id_objet));
 				}
 			}
 		}
