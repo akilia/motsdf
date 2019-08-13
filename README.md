@@ -22,6 +22,16 @@ Mais si, par exemple, vous associez un groupe de mots-clés aux articles, il n'a
 
 …sauf si vous utilisez Motsdf.
 
+### Ok, mais il me semble qu'avec le plugin Champs Extras, je peux déjà faire tout cela…
+C'est vrai. Pour ajouter une gestion de catégories à vos articles ou à vos brèves, c'est aussi la solution que j'ai utilisé pendant longtemps. La liste des catégories s'affiche bien dans le formulaire, privé et publique.
+
+Mais utiliser les mots-clés pour la gestion de catégories est plus puissant et évolutif.
+La liste des avantages est longue, mais je retiendrai les points suivants :
+- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Ce genre de statistique est très appréciée des responsables éditoriaux;
+- un responsable éditorial peut facilement gérer un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
+- avec les mots-clés vous pouvez décider un jour de créer des associations entre objets éditoriaux;
+- etc.
+
 ## Prérequis, configuration et options
 
 ### Prérequis
@@ -65,7 +75,7 @@ Si vous ordonnez les mots-clés d'un groupe avec Rang, cela sera pris en compte 
 ## API supplémentaire
 Deux fonctions non liées directement à ce plugin sont présentes
 
-### function motsdf_liste_mots($id_groupe)
+### motsdf_liste_mots($id_groupe)
 Retourner le tableau id_mot/titre d'un groupe de mots clés.
 
 Très pratique lorsque l'on utilise le plugin <a href="https://contrib.spip.net/Saisies">Saisies</a>
@@ -73,7 +83,7 @@ Très pratique lorsque l'on utilise le plugin <a href="https://contrib.spip.net/
 Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL{4}|motsdf_liste_mots)]})]
 …permet d'afficher la saisie de la liste des mot-clés du groupe N°4 (id_groupe=4)
 
-### function objet_correspondance_association($objet, $id_objet, $type_objet_liens, $liaisons_demandees)
+### objet_correspondance_association($objet, $id_objet, $type_objet_liens, $liaisons_demandees)
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
 
 ## TODO
@@ -87,6 +97,6 @@ Cela peut être utile dans le cas d'un forum ouvert sur abonnement.
 Si cela devient possible, alors utiliser les fonctions d'autorisations dans les tests fait dans le code (pipelines editer_contenu_objet() et formulaire_verifier())
 
 ### Cache Ajax dans le back-office
-Pouvoir le shunter ! En efet si on supprime ou ajoute un mot-clé depuis la VUE, puis que l'on passe en mode EDITION, alors on ne voit pas les modifications. Il faut recharger la page pour voir les modifs apparaître.
+Pouvoir le shunter ! En effet si on supprime ou ajoute un mot-clé depuis la VUE, puis que l'on passe en mode EDITION, alors on ne voit pas les modifications. Il faut recharger la page pour voir les modifs apparaître.
 
 
