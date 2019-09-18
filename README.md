@@ -40,9 +40,10 @@ SPIP >= 3.2
 Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 
 ### Configuration
-*Motsdf* exploite uniquement les configurations qui se trouvent déjà nativement dans *Configuration -> Contenu du site*.
+*Motsdf* exploite uniquement les configurations qui se trouvent déjà nativement dans *Configuration -> Contenu du site*, paragraphe *Les mots-clés*.
 
-Vous devez avoir activé les mots-clés bien sûr, mais vous pouvez aussi choisir d'utiliser la configuration avancée des groupes de mots-clés. Ce choix ouvre à des options exploitées par Motsdf (voir si dessous).
+- Vous devez avoir activé l'utilisation des mots-clés bien sûr.
+- Vous pouvez aussi choisir d'*Utiliser la configuration avancée des groupes de mots-clés*. Ce choix permet d'exploiter d'autres options proposées par Motsdf (voir si dessous).
 
 ### Activation et options
 Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
@@ -69,7 +70,7 @@ Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-cl
 Plus d'infos sur https://contrib.spip.net/Motus
 
 ## Compatibilité étendue
-Motsdf est compatible avec le plugin RANG (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
+**Motsdf** est compatible avec le plugin RANG (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
 Si vous ordonnez les mots-clés d'un groupe avec Rang, cela sera pris en compte dans l'affichage dans le formulaire.
 
 ## API supplémentaire
