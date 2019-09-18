@@ -1,5 +1,5 @@
-# Plugin Motsdf pour SPIP
-**motsdf** = Mots Dans Formulaires
+# Plugin Mots clés dans formulaire
+
 
 ## Objectif
 Afficher les mots-clés d'un groupe dans le mode ÉDITION d’un formulaire d'objet éditorial.
