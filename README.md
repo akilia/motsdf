@@ -25,11 +25,12 @@ Mais si, par exemple, vous associez un groupe de mots-clés aux articles, il n'a
 ### Ok, mais il me semble qu'avec le plugin Champs Extras, je peux déjà faire tout cela…
 C'est vrai. Pour ajouter une gestion de catégories à vos articles ou à vos brèves, c'est aussi la solution que j'ai utilisé pendant longtemps. La liste des catégories s'affiche bien dans le formulaire, privé et publique.
 
-Mais utiliser les mots-clés pour la gestion de catégories est plus puissant et évolutif.
+Mais utiliser les mots-clés pour la gestion de catégories est plus pratique et évolutif.
 La liste des avantages est longue, mais je retiendrai les points suivants :
-- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Ce genre de statistique est très appréciée des responsables éditoriaux;
+
 - un responsable éditorial peut facilement gérer un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
 - avec les mots-clés vous pouvez décider un jour de créer des associations entre objets éditoriaux;
+- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Ce genre de statistique est bien ppréciée des responsables éditoriaux;
 - etc.
 
 ## Prérequis, configuration et options
