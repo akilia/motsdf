@@ -35,7 +35,7 @@ La liste des avantages est longue, mais je retiendrai les points suivants :
 - la vue d'un groupe de mots clés inclue le nombre d'items attachés. Ce genre de statistique est bien ppréciée des responsables éditoriaux;
 - etc.
 
-## Prérequis, configuration et options
+## Prérequis et configuration
 
 ### Prérequis
 SPIP >= 3.2
@@ -48,24 +48,24 @@ Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 - Vous devez avoir activé l'utilisation des mots-clés bien sûr.
 - Vous pouvez aussi choisir d'*Utiliser la configuration avancée des groupes de mots-clés*. Ce choix permet d'exploiter d'autres options proposées par Motsdf (voir si dessous).
 
-### Activation et options
+## Activation et options
 Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
 
-#### Activer l'affichage d'un groupe de mots dans tel ou tel formulaire
+### Activer l'affichage d'un groupe de mots dans un formulaire
 Il suffit ici de chocher les cases correpondantes aux objets auxquels vous voulez associer tel ou tel groupe de mots-clés.
 
-#### Option : Checkbox ou Boutons radio (par défaut 'Checkbox')
+### Option : Checkbox ou Boutons radio (par défaut 'Checkbox')
 **Prérequis** : avoir coché•e la case "Utiliser la configuration avancée des groupes de mots-clés" (voir **Configuration -> Contenu du site**, bloc Les mots-clés).
 
 Par défaut, le choix des mots clés se fait par Checkbox.
 Si vous voulez des boutons radio, choisissez l'option "*On ne peut sélectionner qu’un seul mot-clé à la fois dans ce groupe.*"
 
-#### Option : Saisie obligatoire (par défaut 'saisie libre')
+### Option : Saisie obligatoire (par défaut 'saisie libre')
 **Prérequis** : avoir coché•e la case "*Utiliser la configuration avancée des groupes de mots-clés*" (voir **Configuration -> Contenu du site**, bloc Les mots-clés).
 
 Pour rendre la saisie obligatoire, choisissez l'option "*Groupe important : il est fortement conseillé de sélectionner un mot-clé dans ce groupe.*"
 
-#### Option : Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)(par défaut : 'aucune restriction')
+### Option : Restreindre l'affichage du groupe de mots-clés par rubrique (plugin Motus)(par défaut : 'aucune restriction')
 Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique.
 
 Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
