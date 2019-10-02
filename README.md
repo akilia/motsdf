@@ -30,9 +30,9 @@ La liste des avantages est longue, mais je retiendrai les points suivants :
 
 - un responsable éditorial peut facilement gérer un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
 - avec les mots-clés vous pouvez décider un jour de créer des associations entre objets éditoriaux;
-- vous pouvez aussi joindre une image (logo de mots-clé), un descriptif, un texte;
+- vous pouvez aussi joindre le logo du mot-clé, son descriptif, son texte;
 - Vous pouvez facilement ordonner vos mots-clés avec le plugin rang;
-- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Ce genre de statistique est bien ppréciée des responsables éditoriaux;
+- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Cette information est souvent bien utile et bien apréciée des responsables éditoriaux;
 - etc.
 
 ## Prérequis et configuration
