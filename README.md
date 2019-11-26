@@ -11,7 +11,7 @@ Afficher les mots-clés d'un groupe dans le mode ÉDITION d’un formulaire d'ob
 En l'état, SPIP gère la liaison de mots-clés à un objet éditorial dans le mode VUE de cet objet.
 Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un·e rédacteur·rice occasionel.
 
-Ce plugin propose de gèrer la liaison de mots-clés directement dans le mode EDITION du formulaire. Là, difficile de le rater.
+Ce plugin propose de gèrer les liaisons avec des mots-clés directement dans le mode EDITION du formulaire. Là, difficile de le rater.
 
 Note : la gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés (i.e. sans avoir à passer par le mode EDITION).
 
@@ -31,8 +31,10 @@ La liste des avantages est longue, mais je retiendrai les points suivants :
 - un responsable éditorial peut facilement gérer un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
 - avec les mots-clés vous pouvez décider un jour de créer des associations entre objets éditoriaux;
 - vous pouvez aussi joindre le logo du mot-clé, son descriptif, son texte;
-- Vous pouvez facilement ordonner vos mots-clés avec le plugin rang;
-- la vue d'un groupe de mots clés inclue le nombre d'items attachés. Cette information est souvent bien utile et bien apréciée des responsables éditoriaux;
+- Vous pouvez facilement ordonner vos mots-clés avec le plugin Rang;
+- le tableau d'une liste de mots clés inclut des infos apréciées des responsables éditoriaux comme :
+  - quels sont les types objets déjà liés;
+  - pour chacun d'eux, le nombre de liaison;
 - etc.
 
 ## Prérequis et configuration
