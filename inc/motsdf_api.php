@@ -21,7 +21,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
  * 
  * @api
  * @param int id_groupe
- *		Clé des arguments. En absence utilise l'argument
+ *		ID du groupe de mots dont on veut recupérer la liste.
+ * @param string defaut
+ *		Valeur par defaut du tableau de mots
  *
  * @return array
  *		array(id_mot -> titre, etc.)
@@ -29,7 +31,7 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 function motsdf_liste_mots($id_groupe, $defaut = null) {
 	$liste_mots = array();
 	
-	if (!is_null($defaut)) {
+	if ($defaut) {
 		$liste_mots = array('' => $defaut);
 	}
 
