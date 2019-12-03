@@ -89,11 +89,12 @@ function motsdf_formulaire_charger($flux) {
 
 	$objet = substr($form, 7);
 	$table_objet = table_objet($objet);
-	$id_objet = $flux['args']['args'][0];
+	
 
 	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
+		$id_objet = $flux['args']['args'][0];
 		if (is_numeric($id_objet)) { // c'est une modification. On va chercher les valeurs dans la BdD
 			foreach ($groupes as $groupe) {
 				$champ = slugify($groupe['titre']);
@@ -124,12 +125,17 @@ function motsdf_formulaire_verifier($flux) {
 	if (strncmp($form, 'editer_', 7) !== 0) {
 		return $flux;
 	}
+
 	$objet = substr($form, 7);
-	$table_objet = table_objet($objet);
+	$table_objet = table_objet($objet); // ex. : articles
+	$table_objet_sql = table_objet_sql($table_objet); // ex. : spip_articles
+	$id_table_objet  = id_table_objet($table_objet); // ex. : id_article
+	$id = _request($id_table_objet);
 
 	$groupes = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
+		
 		// Compatibilité avec le puglin Motus : si actif et si on n'est pas dans un contexte rubrique ou que l'on est pas autoriser à montrer ce groupe dans cette rubrique, on sort
 		if (test_plugin_actif('motus')) {
 
@@ -137,46 +143,58 @@ function motsdf_formulaire_verifier($flux) {
 			$desc = $trouver_table($table_objet);
 
 			if ($desc and isset($desc['field']['id_rubrique'])) {
-				// contaxte : si c'est une creation, l'id_rubrique est déjà dans le contexte
+				// contexte : si c'est une creation, l'id_rubrique est déjà dans le contexte
 				if (is_numeric($flux['args']['args']['1'])) {
 					$id_parent = intval($flux['args']['args']['1']);
 				}
 				// sinon, on retrouve l'id_rubrique à partir de l'id_objet
 				else {
-					$table_objet_sql = table_objet_sql($table_objet);
-					$id_table_objet  = id_table_objet($table_objet);
 					$id_parent = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".intval($flux['args']['args']['0']));
+				}
+			} else {
+				// vérifier si ce n'est pas une liaison à une rubrique via une table de liens
+				include_spip('action/editer_liens');
+				if (objet_associable($objet)) {
+					 $liens = objet_trouver_liens(array($objet => $id), '*');
+					 if (isset($liens['rubrique'])) {
+					 	$id_parent = $liens['rubrique'];
+					 }
 				}
 			}
 
-			// On a les infos de contexte : on peut maintenant vérifier pour chaque groupe ce qu'il en est
-			foreach ($groupes as $groupe) {
-				$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
-				$rubs = picker_selected($restrictions, 'rubrique');
-				if (!$restrictions or in_array($id_parent, $rubs) 
-					and $groupe['obligatoire'] == 'oui') {
-					$champ = slugify($groupe['titre']);
-					$categories = _request($champ);
+			// Si on a récupéré un id_parent  (id_rubrique en fait), on vérifie si il fait parti des restrictions défini dans la config
+			if (isset($id_parent)) {
+				foreach ($groupes as $groupe) {
+					$restrictions = sql_getfetsel('rubriques_on', 'spip_groupes_mots', 'id_groupe='.intval($groupe['id_groupe']));
+					$rubs = picker_selected($restrictions, 'rubrique');
+					if (!$restrictions or in_array($id_parent, $rubs) 
+						and $groupe['obligatoire'] == 'oui') {
+						$champ = slugify($groupe['titre']);
+						$categories = _request($champ);
 
-					if (!$categories) {
-						$flux['data'][$champ] = _T('motsdf:saisir_choix');
+						if (!$categories) {
+							$flux['data'][$champ] = _T('motsdf:saisir_choix');
+						}
 					}
 				}
 			}
+			
 		}
 
+		// si le plugin Motus n'est pas présent, on test juste si 
 		else {
 			foreach ($groupes as $groupe) {
 				if ($groupe['obligatoire'] == 'oui') {
 					$champ = slugify($groupe['titre']);
 					$categories = _request($champ);
 					if (!$categories) {
-						$flux['data']['categories_forum'] = _T('motsdf:saisir_choix');
+						$flux['data'][$champ] = _T('motsdf:saisir_choix');
 					}
 				}
 			}
 		}
 	}
+
 	return $flux;
 }
 
@@ -188,6 +206,10 @@ function motsdf_formulaire_verifier($flux) {
  * @param array $flux Données du pipeline
  * @return array      Données du pipeline
 **/ 
+
+/*
+Notice: Undefined index: id_composition_objet in /Users/akilia/htdocs/meric/plugins/motsdf/motsdf_pipelines.php on line 218
+*/
 function motsdf_formulaire_traiter($flux) {
 	$form = $flux['args']['form'];
 	
@@ -197,14 +219,13 @@ function motsdf_formulaire_traiter($flux) {
 
 	$objet = substr($form, 7);
 	$table_objet = table_objet($objet);
-	$id_table_objet = id_table_objet($objet);
-	$id_objet = $flux['data'][$id_table_objet];
-
 	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
 
 	if (count($groupes) > 0) {
 		include_spip('action/editer_mot');
 		include_spip('spip_bonux_fonctions');
+		$id_table_objet = id_table_objet($objet);
+		$id_objet = $flux['data'][$id_table_objet];
 
 		// gérer le cas où une checkbox est décochée : violent, mais pas trouvé mieux
 		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
@@ -222,4 +243,54 @@ function motsdf_formulaire_traiter($flux) {
 	}
 	
 	return $flux;
+}
+
+/**
+ * Trouver l'id_rubrique de l'objet dans l’environnement (cas d'une création) sinon dans la base de données
+ * Marche aussi si l'info sur le parent est contenu dans une table de liaison (spip_blocks_lien par exemple).
+ * Fonction utile uniquement pour la compatibilité avec le plugin Motus
+ * 
+ * @param string $objet
+ * @param int $id_objet
+ * @return int|bool renvoi l'id_rubrique, false sinon
+**/ 
+function motsdf_trouver_id_rubrique($objet, $id_objet) {
+
+	$id_rubrique = _request('id_rubrique');
+	$association = request('associer_objet');
+	$table_objet_sql = table_objet_sql($objet);
+	include_spip('public/quete');
+
+
+	// Chercher l'id_rubrique directement dans la table
+	$trouver_table = charger_fonction('trouver_table', 'base');
+	$desc = $trouver_table($table_objet_sql);
+	if ($desc and isset($desc['field']['id_rubrique'])) {
+		switch ($objet) {
+		case 'rubrique':
+			$id_rubrique = quete_parent($id_objet);
+			break;
+		case 'article':
+			$id_rubrique = quete_rubrique($id_objet);
+			break;
+		default:
+			$id_parent = quete_parent_lang($table_objet_sql, $id_objet);
+			$id_rubrique = $id_parent['id_rubrique'];
+			break;
+		}
+	}
+
+	// Sinon, regarder si l'objet a une table de liaison
+	else {
+		include_spip('action/editer_liens');
+		if (objet_associable($objet)) {
+			 $liens = objet_trouver_liens(array($objet => $id), '*');
+			 if (isset($liens['rubrique'])) {
+			 	$id_rubrique = $liens['id_objet'];
+			 }
+		}
+	}
+
+	return $id_rubrique;
+	
 }
