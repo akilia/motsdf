@@ -54,7 +54,7 @@ Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
 
 ### Activer l'affichage d'un groupe de mots dans un formulaire
-Il suffit ici de chocher les cases correpondantes aux objets auxquels vous voulez associer tel ou tel groupe de mots-clés.
+Vous devez cocher le(s) objet(s) auquel vous voulez associer tel groupe de mots-clés.
 
 ### Option : Checkbox ou Boutons radio (par défaut 'Checkbox')
 **Prérequis** : avoir coché•e la case "Utiliser la configuration avancée des groupes de mots-clés" (voir **Configuration -> Contenu du site**, bloc Les mots-clés).
