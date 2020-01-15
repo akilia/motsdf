@@ -1,0 +1,18 @@
+<B_objet>
+#BOITE_OUVRIR{#ENV{titre},'simple'}
+<BOUCLE_objet(MOTS){id_groupe}>
+	<div><b>#TITRE</b></div>
+	<B_auteurs>
+	<ul class='liste-items'>
+	<BOUCLE_auteurs(AUTEURS){id_mot}{tous}>
+		<li><a href="[(#ID_AUTEUR|generer_url_entite{auteur})]">#NOM</a></li>
+	</BOUCLE_auteurs>
+	</ul>
+	</B_auteurs>
+	<ul class='liste-items'>
+	<li>Aucun·e</li>
+	</ul>
+	<//B_auteurs>
+</BOUCLE_objet>
+#BOITE_FERMER
+</B_objet>

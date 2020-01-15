@@ -120,7 +120,7 @@ function motsdf_formulaire_verifier($flux) {
 		$table_objet = table_objet($objet); // ex. : articles
 		$table_objet_sql = table_objet_sql($table_objet); // ex. : spip_articles
 		$id_table_objet  = id_table_objet($table_objet); // ex. : id_article
-		$id = _request($id_table_objet);
+		$id_objet = _request($id_table_objet);
 		
 		// Compatibilité avec le plugin Motus : si actif on regarde si on est bien avec dans un contexte de rubrique + si il y a des restrictions. Et si oui, si elles s'appliquent.
 		$id_rub = motsdf_trouver_id_parent($objet, $id_objet); 
@@ -145,7 +145,7 @@ function motsdf_formulaire_verifier($flux) {
 				// vérifier si ce n'est pas une liaison à une rubrique via une table de liens
 				include_spip('action/editer_liens');
 				if (objet_associable($objet)) {
-					 $liens = objet_trouver_liens(array($objet => $id), '*');
+					 $liens = objet_trouver_liens(array($objet => $id_objet), '*');
 					 if (isset($liens['rubrique'])) {
 					 	$id_parent = $liens['rubrique'];
 					 }
@@ -236,14 +236,42 @@ function motsdf_formulaire_traiter($flux) {
 }
 
 /**
+ * Afficher les groupes de mots liés à un objet dans la page exec=objets
+ * 
+ * 
+ * @pipeline affiche_droite
+ * @param array $flux Données du pipeline
+ * @return array      Données du pipeline
+**/ 
+function motsdf_affiche_droite($flux) {
+	$objets = $flux['args']['exec'];
+	if ($groupes = motsdf_groupes_actifs_objet($objets, false)) {
+		foreach ($groupes as $groupe) {
+			$id_groupe = $groupe['id_groupe'];
+			$titre_groupe = $groupe['titre'];
+			$flux['data'] .= recuperer_fond("prive/squelettes/inclure/groupe_mots_$objets", array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
+		}
+	}
+
+	return $flux;
+}
+
+/**
  * Tester si des groupes de mots-clés ont été activés pour le formulaire de cet objet
  * 
  * @param string $objet
+ * @param bool $force
  * @return array|bool renvoi un tableau avec les groupes activés pour cet objet, false sinon
 **/ 
-function motsdf_groupes_actifs_objet($objet) {
-	$table_objet = table_objet($objet);
-	$activation = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
+function motsdf_groupes_actifs_objet($objet, $force = true) {
+	if ($force) {
+		$objets = table_objet($objet); // la version plurielle du type de l'objet
+	}
+	else {
+		$objets = $objet; 
+	}
+	
+	$activation = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '$objets'");
 	if (count($activation) > 0) {
 		return $activation;
 	}
@@ -300,3 +328,5 @@ function motsdf_trouver_id_parent($objet, $id_objet) {
 	
 	return $id_rubrique;
 }
+
+
