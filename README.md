@@ -28,7 +28,7 @@ C'est vrai. Pour ajouter une gestion de catégories à vos articles ou à vos br
 Mais utiliser les mots-clés pour la gestion de catégories est plus pratique et évolutif.
 La liste des avantages est longue, mais je retiendrai les points suivants :
 
-- un responsable éditorial peut facilement gérer un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
+- un responsable éditorial peut facilement modifier un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
 - avec les mots-clés vous pouvez décider un jour de créer des associations entre objets éditoriaux;
 - vous pouvez aussi joindre le logo du mot-clé, son descriptif, son texte;
 - Vous pouvez ordonner par glisser/déposer vos mots-clés avec le plugin Rang;
