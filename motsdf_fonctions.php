@@ -14,3 +14,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 }
 
 include_spip('inc/motsdf_api');
+
+
+function motsdf_id_mot($objet, $id_objet) {
+	$id_mot = sql_getfetsel('id_mot', 'spip_mots_liens', 'objet='.sql_quote($objet).' AND id_objet='.intval($id_objet));
+	
+	return $id_mot;
+}
