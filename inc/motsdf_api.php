@@ -16,8 +16,10 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 /**
  * Retourner le tableau id_mot/titre d'un groupe de mots clés
  * Utile pour les #SAISIE -> datas
+ *
  * @example
- *  [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL{4}|motsdf_liste_mots)]})]
+ *  [(#SAISIE{checkbox, id_mot, Choisir une case à cocher, datas=[(#VAL{4}|motsdf_liste_mots)]})]
+ *  [(#SAISIE{radio, categorie, datas=[(#VAL{1}|motsdf_liste_mots{valeur_par_defaut})]})]
  * 
  * @api
  * @param int id_groupe
@@ -38,9 +40,12 @@ function motsdf_liste_mots($id_groupe, $defaut = null) {
 	$res = sql_allfetsel('id_mot, titre', 'spip_mots', 'id_groupe='.intval($id_groupe));
 	foreach ($res as $value) {
 		$add_mots[$value['id_mot']] = $value['titre'];
-
 	}
-	$liste_mots = $liste_mots + $add_mots;
+
+	if (isset($add_mots)){
+		$liste_mots += $add_mots;
+	}
+
 	return $liste_mots;
 }
 
