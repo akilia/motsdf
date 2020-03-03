@@ -43,7 +43,9 @@ function motsdf_editer_contenu_objet($flux) {
 
 				if (!$restrictions or in_array($id_rubrique, $rubs)) {
 					$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-					$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+					$inclure = (isset($groupe['mots_arborescents']) && $groupe['mots_arborescents'] == 'oui' ? 'inclure/inc-mots_cles_arbo_df' : 'inclure/inc-mots_cles_df');
+					$saisie_mot = recuperer_fond($inclure, array_merge($flux['args']['contexte'], array('motdf'=>$motdf))
+				);
 
 					$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 				}
@@ -52,7 +54,8 @@ function motsdf_editer_contenu_objet($flux) {
 			foreach ($groupes as $groupe) {
 				// ajouter la saisie du ou des groupes de mots clés
 				$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-				$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+				$inclure = (isset($groupe['mots_arborescents']) && $groupe['mots_arborescents'] == 'oui' ? 'inclure/inc-mots_cles_arbo_df' : 'inclure/inc-mots_cles_df');
+				$saisie_mot = recuperer_fond($inclure, array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
 				$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 			}
@@ -247,9 +250,12 @@ function motsdf_affiche_droite($flux) {
 	$objets = $flux['args']['exec'];
 	if ($groupes = motsdf_groupes_actifs_objet($objets, false)) {
 		foreach ($groupes as $groupe) {
-			$id_groupe = $groupe['id_groupe'];
-			$titre_groupe = $groupe['titre'];
-			$flux['data'] .= recuperer_fond("prive/squelettes/inclure/groupe_mots_$objets", array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
+			$inclure = "prive/squelettes/inclure/groupe_mots_$objets";
+			if(find_in_path($inclure)){
+				$id_groupe = $groupe['id_groupe'];
+				$titre_groupe = $groupe['titre'];
+				$flux['data'] .= recuperer_fond($inclure, array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
+			}
 		}
 	}
 
@@ -271,7 +277,13 @@ function motsdf_groupes_actifs_objet($objet, $force = true) {
 		$objets = $objet; 
 	}
 	
-	$activation = sql_allfetsel('id_groupe, titre, obligatoire', 'spip_groupes_mots', "tables_liees LIKE '$objets'");
+	$select = array('id_groupe', 'titre', 'obligatoire');
+	
+	if(test_plugin_actif('motsar')){
+		$select[] = 'mots_arborescents';
+	}
+	
+	$activation = sql_allfetsel($select, 'spip_groupes_mots', "tables_liees LIKE '$objets'");
 	if (count($activation) > 0) {
 		return $activation;
 	}

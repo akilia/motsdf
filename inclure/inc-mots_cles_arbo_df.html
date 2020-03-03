@@ -1,7 +1,7 @@
 [(#REM) Compatibilité avec le plugin RANG ][
 (#VAL{mots}|in_array{#RANG_LISTE_OBJETS}|?{#SET{par, rang},#SET{par, #ENV{par, titre}}})]
 
-#SET{name,#ENV{motdf/nom_groupe}|slugify}
+#SET{name,#ENV{motdf/nom_groupe}|htmlspecialchars_decode{#CONST{ENT_QUOTES}}|slugify}
 #SET{id_grp, #ENV{motdf/id_groupe}}
 
 [(#REM) Radio ou Checkbox ? Voir configuration choisie dans le groupe de mot-clés "On ne peut sélectionner qu’un seul mot-clé à la fois dans ce groupe"]
@@ -13,11 +13,19 @@
 <div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
 	<label>#ENV{motdf/nom_groupe}[<span class='obligatoire'>(#GET{obli}|=={oui}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</label>
 	[<span class='erreur_message'>(#ENV**{erreurs/#GET{name}})</span>]
-	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}>
-	<div class="choix choix_#ID_MOT">
+	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}{id_parent=0}>
+	<div class="choix choix_#ID_MOT  motsar-racine">
 		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
 		<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
 	</div>
+	<BOUCLE_groupe_mots_enfants(MOTS){id_parent}{id_groupe?}{par num titre, titre}>
+		<div class="choix choix_#ID_MOT  motsar-enfant">
+			[(#PROFONDEUR|mostar_tabulation)]
+			<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
+			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
+		</div>				
+		<BOUCLE_groupe_mots_recursif(BOUCLE_groupe_mots_enfants) />
+	</BOUCLE_groupe_mots_enfants>
 	</BOUCLE_groupe_mots>
 </div>
 </B_groupe_mots>
