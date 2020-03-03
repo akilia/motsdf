@@ -1,0 +1,18 @@
+<B_objet>
+#BOITE_OUVRIR{#ENV{titre},'simple'}
+<BOUCLE_objet(MOTS){id_groupe}>
+	<div><b>#TITRE</b></div>
+	<B_articles>
+	<ul class='liste-items'>
+	<BOUCLE_articles(ARTICLES){id_mot}{tous}>
+		<li><a href="[(#ID_ARTICLE|generer_url_entite{id_article})]">#TITRE</a></li>
+	</BOUCLE_articles>
+	</ul>
+	</B_articles>
+	<ul class='liste-items'>
+	<li>Aucun</li>
+	</ul>
+	<//B_articles>
+</BOUCLE_objet>
+#BOITE_FERMER
+</B_objet>
