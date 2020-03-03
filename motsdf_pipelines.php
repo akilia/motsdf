@@ -250,9 +250,12 @@ function motsdf_affiche_droite($flux) {
 	$objets = $flux['args']['exec'];
 	if ($groupes = motsdf_groupes_actifs_objet($objets, false)) {
 		foreach ($groupes as $groupe) {
-			$id_groupe = $groupe['id_groupe'];
-			$titre_groupe = $groupe['titre'];
-			$flux['data'] .= recuperer_fond("prive/squelettes/inclure/groupe_mots_$objets", array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
+			$inclure = "prive/squelettes/inclure/groupe_mots_$objets";
+			if(find_in_path($inclure)){
+				$id_groupe = $groupe['id_groupe'];
+				$titre_groupe = $groupe['titre'];
+				$flux['data'] .= recuperer_fond($inclure, array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
+			}
 		}
 	}
 
