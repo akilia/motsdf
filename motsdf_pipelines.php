@@ -43,7 +43,7 @@ function motsdf_editer_contenu_objet($flux) {
 
 				if (!$restrictions or in_array($id_rubrique, $rubs)) {
 					$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-					$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+					$saisie_mot = recuperer_fond('inclure/inc-mots_cles_df', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
 					$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 				}
@@ -52,7 +52,7 @@ function motsdf_editer_contenu_objet($flux) {
 			foreach ($groupes as $groupe) {
 				// ajouter la saisie du ou des groupes de mots clés
 				$motdf =  array('nom_groupe' => $groupe['titre'], 'id_groupe' => $groupe['id_groupe'], 'id_objet' => $id_objet, 'objet' => $objet);
-				$saisie_mot = recuperer_fond('inclure/inc-mots_cles', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
+				$saisie_mot = recuperer_fond('inclure/inc-mots_cles_df', array_merge($flux['args']['contexte'], array('motdf'=>$motdf)));
 
 				$flux['data'] = str_replace('<!--extra-->', '<!--extra-->' . $saisie_mot, $flux['data']);
 			}
