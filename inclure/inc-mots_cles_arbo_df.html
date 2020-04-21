@@ -9,23 +9,42 @@
 [(#REM) Saisie obligatoire ? Voir configuration choisie dans le groupe de mot-clés "Groupe important : il est fortement conseillé de sélectionner un mot-clé dans ce groupe."]
 #SET{obli, #INFO_OBLIGATOIRE{groupe_mots, #GET{id_grp}}}
 
+[(#REM) Au delà d'un certain nombre de boutons radios, ce n'est plus ergonomique et on bascule sur un select ]
+#SET{max_radios,10}
+<BOUCLE_groupe_mots_total(MOTS){id_groupe=#GET{id_grp}}{pagination 1}>#SET{total_mots,#GRAND_TOTAL}</BOUCLE_groupe_mots_total>
+
 <B_groupe_mots>
 <div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
 	<label>#ENV{motdf/nom_groupe}[<span class='obligatoire'>(#GET{obli}|=={oui}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</label>
 	[<span class='erreur_message'>(#ENV**{erreurs/#GET{name}})</span>]
+	[(#GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}})
+	<select name="#GET{name}\[\]" id="champ_#GET{name}">
+		<option value=""></option>
+	]
 	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}{id_parent=0}>
-	<div class="choix choix_#ID_MOT  motsar-racine">
-		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
-		<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
-	</div>
+		<BOUCLE_test_mode(CONDITION){si #GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}}}>
+		<option value="#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)selected='selected']>#TITRE</option>
+		</BOUCLE_test_mode>
+		<div class="choix choix_#ID_MOT  motsar-racine">
+			<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
+			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
+		</div>
+		<//B_test_mode>
 	<BOUCLE_groupe_mots_enfants(MOTS){id_parent}{id_groupe?}{par num titre, titre}>
+		<BOUCLE_test_mode2(CONDITION){si #GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}}}>
+		<option value="#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)selected='selected']>[(#PROFONDEUR|mostar_tabulation)]#TITRE</option>
+		</BOUCLE_test_mode2>
 		<div class="choix choix_#ID_MOT  motsar-enfant">
 			[(#PROFONDEUR|mostar_tabulation)]
 			<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
 			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
 		</div>				
 		<BOUCLE_groupe_mots_recursif(BOUCLE_groupe_mots_enfants) />
+		<//B_test_mode2>
 	</BOUCLE_groupe_mots_enfants>
 	</BOUCLE_groupe_mots>
+	[(#GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}})
+		</select>
+	]
 </div>
 </B_groupe_mots>
