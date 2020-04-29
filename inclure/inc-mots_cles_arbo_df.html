@@ -25,7 +25,7 @@
 		<BOUCLE_test_mode(CONDITION){si #GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}}}>
 		<option value="#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)selected='selected']>#TITRE</option>
 		</BOUCLE_test_mode>
-		<div class="choix choix_#ID_MOT  motsar-racine">
+		<div class="choix choix_#ID_MOT motsar-mot motsar-racine" data-id_mot="#ID_MOT">
 			<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
 			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
 		</div>
@@ -34,7 +34,7 @@
 		<BOUCLE_test_mode2(CONDITION){si #GET{type_selection}|=={radio}|et{#GET{total_mots}|>{#GET{max_radios}}}}>
 		<option value="#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)selected='selected']>[(#PROFONDEUR|mostar_tabulation)]#TITRE</option>
 		</BOUCLE_test_mode2>
-		<div class="choix choix_#ID_MOT  motsar-enfant">
+		<div class="choix choix_#ID_MOT motsar-mot motsar-enfant" data-id_mot="#ID_MOT" data-id_parent="#ID_PARENT">
 			[(#PROFONDEUR|mostar_tabulation)]
 			<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
 			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
@@ -48,3 +48,41 @@
 	]
 </div>
 </B_groupe_mots>
+
+<BOUCLE_test_config(CONDITION){si #CONFIG{motsar/checkbox_repliables}}>
+<script>
+    $(function() {
+        function motsarCheckRacine(id_mot) {
+            var cbRacine = $('.motsar-mot[data-id_mot=' + id_mot + ']').find('input');
+            var cbEnfants = $('.motsar-mot[data-id_parent=' + id_mot + ']');
+            // replier ou déplier les enfants en fonction de l'état
+            if(cbRacine.is(':checked')) {
+                cbEnfants.show();
+            } else {
+                cbEnfants.hide();
+                cbEnfants.each(function() {
+                    $(this).find('input').prop('checked', false);
+                });
+            }
+            // vérifier chaque enfant
+            cbEnfants.each(function() {
+                motsarCheckRacine($(this).data('id_mot'))
+            });
+            // ajouter une bordure sous le dernier item visible
+            $('.motsar-mot--last').removeClass('motsar-mot--last');
+            $('.editer').each(function() {
+                $(this).find('.motsar-mot:visible').last().addClass('motsar-mot--last');
+            });
+        }
+
+        $('.motsar-enfant').hide();
+        $('.motsar-mot').each(function() {
+            var idMot = $(this).data('id_mot');
+            motsarCheckRacine(idMot)
+            $(this).find('input').on('change', function() {
+                motsarCheckRacine(idMot)
+            });
+        });
+    });
+</script>
+</BOUCLE_test_config>
