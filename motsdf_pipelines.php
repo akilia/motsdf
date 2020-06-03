@@ -283,7 +283,7 @@ function motsdf_groupes_actifs_objet($objet, $force = true) {
 		$select[] = 'mots_arborescents';
 	}
 	
-	$activation = sql_allfetsel($select, 'spip_groupes_mots', "tables_liees LIKE '$objets'");
+	$activation = sql_allfetsel($select, 'spip_groupes_mots', "tables_liees LIKE '%$objets%'");
 	if (count($activation) > 0) {
 		return $activation;
 	}
