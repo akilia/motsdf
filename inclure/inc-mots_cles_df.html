@@ -9,15 +9,29 @@
 [(#REM) Saisie obligatoire ? Voir configuration choisie dans le groupe de mot-clés "Groupe important : il est fortement conseillé de sélectionner un mot-clé dans ce groupe."]
 #SET{obli, #INFO_OBLIGATOIRE{groupe_mots, #GET{id_grp}}}
 
+[(#REM) Au delà d'un certain nombre de boutons radios, ce n'est plus ergonomique et on bascule sur un select ]
+#SET{max_radios,10}
+
 <B_groupe_mots>
 <div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
 	<label>#ENV{motdf/nom_groupe}[<span class='obligatoire'>(#GET{obli}|=={oui}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</label>
 	[<span class='erreur_message'>(#ENV**{erreurs/#GET{name}})</span>]
+	[(#GET{type_selection}|=={radio}|et{#TOTAL_BOUCLE|>{#GET{max_radios}}})
+	<select name="#GET{name}\[\]" id="champ_#GET{name}">
+		<option value=""></option>
+	]
 	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}>
-	<div class="choix choix_#ID_MOT">
-		<input type="#GET{type_selection, checkbox}" name='#GET{name}[]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
-		<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
-	</div>
+		<BOUCLE_test_mode(CONDITION){si #GET{type_selection}|=={radio}|et{#_groupe_mots:TOTAL_BOUCLE|>{#GET{max_radios}}}}>
+		<option value="#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)selected='selected']>#TITRE</option>
+		</BOUCLE_test_mode>
+		<div class="choix choix_#ID_MOT">
+			<input type="#GET{type_selection, checkbox}" name='#GET{name}\[\]' value="#ID_MOT" id="champ_#GET{name}_#ID_MOT" [(#ID_MOT|in_any{#ENV{#GET{name}}}|oui)checked='checked']>
+			<label for="champ_#GET{name}_#ID_MOT">#TITRE</label>
+		</div>
+		<//B_test_mode>
 	</BOUCLE_groupe_mots>
+	[(#GET{type_selection}|=={radio}|et{#TOTAL_BOUCLE|>{#GET{max_radios}}})
+		</select>
+	]
 </div>
 </B_groupe_mots>
