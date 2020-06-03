@@ -10,7 +10,7 @@
 #SET{obli, #INFO_OBLIGATOIRE{groupe_mots, #GET{id_grp}}}
 
 [(#REM) Au delà d'un certain nombre de boutons radios, ce n'est plus ergonomique et on bascule sur un select ]
-#SET{max_radios,10}
+#SET{max_radios,7}
 
 <B_groupe_mots>
 <div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
@@ -19,6 +19,14 @@
 	[(#GET{type_selection}|=={radio}|et{#TOTAL_BOUCLE|>{#GET{max_radios}}})
 	<select name="#GET{name}\[\]" id="champ_#GET{name}">
 		<option value=""></option>
+	]
+	[(#REM) Si c'est une sélection radio, ajout d’un bouton radio 'vide' permettant de désactiver le choix. 
+	Le label de ce bouton est surchargeable via un fichier de langue]
+	[(#GET{type_selection}|=={radio}|et{#TOTAL_BOUCLE|<={#GET{max_radios}}})
+	<div class="choix choix_aucun">
+		<input type="radio" name='#GET{name}\[\]' value="" id="champ_#GET{name}_0" [(#ENV{#GET{name}}|non)checked='checked']>
+		<label for="champ_#GET{name}_0"><:motsdf:aucun:></label>
+	</div>
 	]
 	<BOUCLE_groupe_mots(MOTS){id_groupe=#GET{id_grp}}{par #GET{par}}>
 		<BOUCLE_test_mode(CONDITION){si #GET{type_selection}|=={radio}|et{#_groupe_mots:TOTAL_BOUCLE|>{#GET{max_radios}}}}>

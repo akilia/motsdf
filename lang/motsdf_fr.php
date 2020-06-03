@@ -7,6 +7,9 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
 
+	// A
+	'aucun' => 'Aucun',
+
 	// M
 	'motsdf_titre' => 'Mots dans formulaires',
 
