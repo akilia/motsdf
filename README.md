@@ -50,7 +50,7 @@ Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 - Vous devez avoir activé l'utilisation des mots-clés bien sûr.
 - Vous pouvez aussi choisir d'*Utiliser la configuration avancée des groupes de mots-clés*. Ce choix permet d'exploiter d'autres options proposées par Motsdf (voir si dessous).
 
-## Activation et options
+## Activation et options pour les rédacteurs
 Tous ce qui suit se passe désormais dans la page de modification d'un groupe de mots, depuis *Édition -> Mots-clés*.
 
 ### Activer l'affichage d'un groupe de mots dans le formulaire d'un objet
@@ -73,6 +73,20 @@ Ce plugin est compatible avec le plugin Motus : Groupes de mots par rubrique.
 Une fois activé, et toujours dans le formulaire d'édition du groupe de mots-clés, choisir les restrictions par rubrique qui vous conviennent.
 
 Plus d'infos sur https://contrib.spip.net/Motus
+
+## Options pour les Webmestres
+Pour une composition, vous pouvez configurer quels seront les champs à afficher dans le formulaire de saisie du rédacteur.
+Ainsi il est possible :
+### d'activer la saisie d'un groupe de mots (voir plugin Motsdf)
+Dans le fichier XML de votre composition vous devez alors ajouter la ligne suivante
+```
+<configuration>fieldset_mots:oui/id_groupe:4</configuration>
+```
+
+###d'activer le fiedset "bouton"
+```
+<configuration>fieldset_btn:oui</configuration>
+```
 
 ## Compatibilité étendue
 **Motsdf** est compatible avec le plugin RANG (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
