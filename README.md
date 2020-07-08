@@ -83,7 +83,7 @@ Dans le fichier XML de votre composition vous devez alors ajouter la ligne suiva
 <configuration>fieldset_mots:oui/id_groupe:4</configuration>
 ```
 
-###d'activer le fiedset "bouton"
+### d'activer le fiedset "bouton"
 ```
 <configuration>fieldset_btn:oui</configuration>
 ```
