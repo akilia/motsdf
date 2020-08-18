@@ -111,6 +111,9 @@ Ex. : [(#SAISIE{checkbox, id_mot, label=Choisir une case à cocher, datas=[(#VAL
 Traiter un lot de demandes de liaisons et/ou de dissociations. Bien utile pour les traitements par lot, par exemple un tableau de cases à cocher dans un formulaire.
 
 ## TODO
+
+### Ecrire un script de migration d'un champs extras vers un groupe de mots-clés
+
 ### Option : quels status ?
 Prise en compte des choix fait sur les statuts qui peuvent attribuer des mots-clés.
 Attentio : voir le prérequis ci-dessous.
