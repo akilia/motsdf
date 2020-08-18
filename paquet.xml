@@ -1,9 +1,9 @@
 <paquet
 	prefix="motsdf"
 	categorie="navigation"
-	version="0.3.3"
+	version="0.3.4"
 	etat="dev"
-	compatibilite="[3.2.1;3.2.*]"
+	compatibilite="[3.2.1;3.3.*]"
 	logo="prive/themes/spip/images/motsdf-64.png"
 	documentation=""
 	schema="1.0.0" 
@@ -29,6 +29,9 @@
 	<pipeline nom="formulaire_charger" inclure="motsdf_pipelines.php" /> 
 	<pipeline nom="formulaire_verifier" inclure="motsdf_pipelines.php" /> 
 	<pipeline nom="formulaire_traiter" inclure="motsdf_pipelines.php" /> 
-	<pipeline nom="affiche_droite" inclure="motsdf_pipelines.php" /> 
+	<pipeline nom="affiche_droite" inclure="motsdf_pipelines.php" />
+
+	<!-- Donner la possibilité d'ajouter ou d'enlever un groupe de mots pour un objet en particulier -->
+	<pipeline nom="motsdf_activer_objet" action="" />
 
 </paquet>

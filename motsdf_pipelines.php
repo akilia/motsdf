@@ -13,6 +13,8 @@ if (!defined('_ECRIRE_INC_VERSION')) {
 	return;
 }
 
+include_spip('inc/motsdf');
+
 /**
  * Insérer la saisie du ou des groupes de mots dans le formulaire de l’objet
  * 
@@ -66,7 +68,7 @@ function motsdf_editer_contenu_objet($flux) {
 
 
 /**
- * Charger les mots-clés
+ * Charger les valeurs des mots-clés pour cette objet/id_objet
  * 
  * @pipeline formulaire_traiter
  * @param array $flux Données du pipeline
@@ -187,7 +189,6 @@ function motsdf_formulaire_verifier($flux) {
 			}
 		}
 	}
-
 	return $flux;
 }
 
@@ -211,10 +212,7 @@ function motsdf_formulaire_traiter($flux) {
 	}
 
 	$objet = substr($form, 7);
-	$table_objet = table_objet($objet);
-	$groupes = sql_allfetsel('id_groupe, titre', 'spip_groupes_mots', "tables_liees LIKE '%$table_objet%'");
-
-	if (count($groupes) > 0) {
+	if ($groupes = motsdf_groupes_actifs_objet($objet)) {
 		include_spip('action/editer_mot');
 		include_spip('spip_bonux_fonctions');
 		$id_table_objet = id_table_objet($objet);
@@ -261,84 +259,3 @@ function motsdf_affiche_droite($flux) {
 
 	return $flux;
 }
-
-/**
- * Tester si des groupes de mots-clés ont été activés pour le formulaire de cet objet
- * 
- * @param string $objet
- * @param bool $force
- * @return array|bool renvoi un tableau avec les groupes activés pour cet objet, false sinon
-**/ 
-function motsdf_groupes_actifs_objet($objet, $force = true) {
-	if ($force) {
-		$objets = table_objet($objet); // la version plurielle du type de l'objet
-	}
-	else {
-		$objets = $objet; 
-	}
-	
-	$select = array('id_groupe', 'titre', 'obligatoire');
-	
-	if(test_plugin_actif('motsar')){
-		$select[] = 'mots_arborescents';
-	}
-	
-	$activation = sql_allfetsel($select, 'spip_groupes_mots', "tables_liees LIKE '%$objets%'");
-	if (count($activation) > 0) {
-		return $activation;
-	}
-
-	return false;
-}
-
-/**
- * Trouver l'id_rubrique de l'objet dans l’environnement (cas d'une création) sinon dans la base de données
- * Marche aussi si l'info sur le parent est contenu dans une table de liaison (spip_blocks_lien par exemple).
- * Fonction utile uniquement pour la compatibilité avec le plugin Motus
- * 
- * @param string $objet
- * @param int $id_objet
- * @return int|bool renvoi l'id_rubrique, false sinon
-**/ 
-function motsdf_trouver_id_parent($objet, $id_objet) {
-
-	/* Création de l'objet : récupérer l'id_rubrique dans le contexte */
-	$id_rubrique = _request('id_rubrique');
-	// $association = _request('associer_objet');
-
-	/* Modification : aller chercher l'id_rubrique directement dans la table ou dans une liaison */
-	if (
-		!$id_rubrique
-		and is_numeric($id_objet)
-	) {
-		$table_objet_sql = table_objet_sql($objet);
-		$trouver_table = charger_fonction('trouver_table', 'base');
-		$desc = $trouver_table($table_objet_sql);
-		if (
-			$desc 
-			and isset($desc['field']['id_rubrique'])
-		) {
-			switch ($objet) {
-				case 'rubrique':
-					$id_rubrique = $id_objet; // pour une rubrique on renvoie l'id_rubrique lui même, pas son parent
-					break;
-				default:
-					$id_table_objet = id_table_objet($objet);
-					$id_rubrique = sql_getfetsel('id_rubrique', $table_objet_sql, "$id_table_objet=".$id_objet);
-					break;
-			}
-		} else { // Sinon, regarder si l'objet a une table de liaison
-			include_spip('action/editer_liens');
-			if (objet_associable($objet)) {
-				 $liens = objet_trouver_liens(array($objet => $id), '*');
-				 if (isset($liens['rubrique'])) {
-				 	$id_rubrique = $liens['id_objet'];
-				 }
-			}
-		}
-	}
-	
-	return $id_rubrique;
-}
-
-
