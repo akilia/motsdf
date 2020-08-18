@@ -114,6 +114,7 @@ function motsdf_groupes_actifs_objet($objet, $force = true) {
 		$objets = $objet; 
 	}
 	
+	// Les infos nécessaires aux traitements
 	$select = array('id_groupe', 'titre', 'obligatoire');
 	
 	// Compatibilité avec le plugin Mots Arborescents
@@ -124,9 +125,14 @@ function motsdf_groupes_actifs_objet($objet, $force = true) {
 	// Regarder si l'objet a été sélectionné dans la configuration du groupe de mots-clés
 	$activation = sql_allfetsel($select, 'spip_groupes_mots', "tables_liees LIKE '%$objets%'");
 
-	// Donner aux plugins la possibilité d'ajouter ou d'enlever un groupe de mots pour un objet en particulier
-	$activation = pipeline('motsdf_activer_objet', $activation);
-
+	// Donner la possibilité d'ajouter ou d'enlever un groupe de mots pour un objet en particulier
+	$activation = pipeline('motsdf_activer_objet', array(
+		'args' => array(
+			'objets' => $objets,
+			'select' => $select
+		),
+		'data' => $activation
+	));
 
 	if (!empty($activation)) {
 		return $activation;
