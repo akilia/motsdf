@@ -1,19 +1,18 @@
-# Plugin Mots clés dans formulaire
-
+# Plugin Mots clés Dans Formulaire
 
 ## Objectif
 Afficher les mots-clés d'un groupe dans le mode ÉDITION d’un formulaire d'objet éditorial.
 
-
 ## Pourquoi ce besoin ?
 
-### Amélioration UX du Back-office
+### Amélioration UX de l'association de mots-clés.
 En l'état, SPIP gère la liaison de mots-clés à un objet éditorial dans le mode VUE de cet objet.
-Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un·e rédacteur·rice occasionel.
+Quelques tests utilisateurs montrent que cette dichotomie n'est pas toujours évidente pour un rédacteur occasionel·le.
 
-Ce plugin propose de gèrer les liaisons avec des mots-clés directement dans le mode EDITION du formulaire. Là, difficile de le rater.
+Ce plugin permet de gèrer les liaisons avec des mots-clés directement dans le mode EDITION du formulaire.
+Là, difficile de le rater.
 
-Note : la gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour modifier (ajouter, supprimer) des liaisons de mot-clés (i.e. sans avoir à passer par le mode EDITION).
+Note : la gestion native des liaisons de mots-clés dans le mode VUE devient alors un raccourci pratique pour gérer (ajouter, supprimer) des liaisons de mot-clés sans avoir à passer par le mode EDITION.
 
 ### Utile pour un affichage publique de votre formulaire
 Comme le dit la documentation de SPIP.net, il est possible d'utiliser dans les pages publiques les formulaires de l’espace privé : formulaire article, brève, etc. (voir https://www.spip.net/fr_article3788.html)
@@ -23,9 +22,9 @@ Mais si, par exemple, vous associez un groupe de mots-clés aux articles, il n'a
 …sauf si vous utilisez Motsdf.
 
 ### Ok, mais il me semble qu'avec le plugin Champs Extras, je peux déjà faire tout cela…
-C'est vrai. Pour ajouter une gestion de catégories à vos articles ou à vos brèves, c'est aussi la solution que j'ai utilisé pendant longtemps. La liste des catégories s'affiche bien dans le formulaire, privé et publique.
+C'est vrai. Pour ajouter par exemple une gestion de catégories à vos articles ou à vos brèves, c'est aussi la solution que j'ai utilisé pendant longtemps. La liste des catégories s'affiche bien dans le formulaire, privé et publique.
 
-Mais utiliser les mots-clés pour la gestion de catégories est plus pratique et évolutif.
+Mais choisir d'utiliser les mots-clés pour la gestion de catégories est plus pratique et plus évolutif.
 La liste des avantages est longue, mais je retiendrai les points suivants :
 
 - un responsable éditorial peut facilement modifier un groupe de mots clés. Alors que la modification d'un champ extra est plutôt réservé à des utilisateurs avertis;
@@ -40,12 +39,11 @@ La liste des avantages est longue, mais je retiendrai les points suivants :
 ## Prérequis et configuration
 
 ### Prérequis
-SPIP >= 3.2
-
-Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
+- SPIP >= 3.2
+- Plugin SPIP Bonux (pris en compte automatiquement à l'installation)
 
 ### Configuration
-*Motsdf* exploite uniquement les configurations qui se trouvent déjà nativement dans *Configuration -> Contenu du site*, paragraphe *Les mots-clés*.
+*Motsdf* exploite les configurations qui se trouvent déjà nativement dans *Configuration -> Contenu du site*, paragraphe *Les mots-clés*.
 
 - Vous devez avoir activé l'utilisation des mots-clés bien sûr.
 - Vous pouvez aussi choisir d'*Utiliser la configuration avancée des groupes de mots-clés*. Ce choix permet d'exploiter d'autres options proposées par Motsdf (voir si dessous).
@@ -89,9 +87,15 @@ Dans le fichier XML de votre composition vous devez alors ajouter la ligne suiva
 ```
 
 ## Compatibilité étendue
-**Motsdf** est compatible avec le plugin RANG (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
+**Motsdf** est compatible avec le plugin **Rang** (https://contrib.spip.net/Rang-ordonner-une-liste-par-Drag-Drop).
 Si vous ordonnez les mots-clés d'un groupe avec Rang, cela sera pris en compte dans l'affichage dans le formulaire.
 
+Il est également compatible avec le plugin **Motsar** (https://contrib.spip.net/Mots-arborescents-4726)(Merci Nicod)
+
+## Pipeline
+Le pipeline **motsdf_activer_objet** permet de s'insérer dans le processus d'attribution d'un groupe de mots-clés à un objet éditorial.
+Il devient par exemple possible d'insérer un groupe de mots-clés par un processus différent que celui proposé par le plugin lui-même. 
+ 
 ## API supplémentaire
 Deux fonctions non liées directement à ce plugin sont présentes
 
