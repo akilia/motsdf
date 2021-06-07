@@ -100,7 +100,7 @@ function objet_correspondance_association($objet, $id_objet, $type_objet_liens, 
 }
 
 /**
- * Tester si des groupes de mots-clés ont été activés pour le formulaire de cet objet
+ * Tester si des groupes de mots-clés ont été activés pour s'afficher dans le formulaire de cet objet
  * 
  * @param string $objet
  * @param bool $force
