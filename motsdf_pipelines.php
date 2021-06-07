@@ -237,7 +237,7 @@ function motsdf_formulaire_traiter($flux) {
 }
 
 /**
- * Afficher les groupes de mots liés à un objet dans la page exec=objets
+ * Afficher les groupes de mots liés à un objet dans les pages exec=objet et exec=objets
  * 
  * 
  * @pipeline affiche_droite
@@ -245,17 +245,18 @@ function motsdf_formulaire_traiter($flux) {
  * @return array      Données du pipeline
 **/ 
 function motsdf_affiche_droite($flux) {
-	$objets = $flux['args']['exec'];
-	if ($groupes = motsdf_groupes_actifs_objet($objets, false)) {
+	$objet = $flux['args']['exec'];
+	$objets = table_objet($objet);
+
+	if ($groupes = motsdf_groupes_actifs_objet($objets)) {
 		foreach ($groupes as $groupe) {
 			$inclure = "prive/squelettes/inclure/groupe_mots_$objets";
-			if(find_in_path($inclure)){
+			if ($f = find_in_path("$inclure.html")) {
 				$id_groupe = $groupe['id_groupe'];
 				$titre_groupe = $groupe['titre'];
 				$flux['data'] .= recuperer_fond($inclure, array('id_groupe' => $id_groupe, 'titre' => $titre_groupe));
 			}
 		}
 	}
-
 	return $flux;
 }
