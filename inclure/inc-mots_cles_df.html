@@ -13,7 +13,7 @@
 #SET{max_radios,7}
 
 <B_groupe_mots>
-<div class="editer editer-groupe[ (#GET{obli}|=={oui}|oui) obligatoire]">
+<div class="editer editer_#GET{name}[ (#GET{obli}|=={oui}|oui) obligatoire]">
 	<label>#ENV{motdf/nom_groupe}[<span class='obligatoire'>(#GET{obli}|=={oui}|oui)[(#ENV*{info_obligatoire}|is_null|?{<:info_obligatoire_02:>,#ENV*{info_obligatoire}})]</span>]</label>
 	[<span class='erreur_message'>(#ENV**{erreurs/#GET{name}})</span>]
 	[(#GET{type_selection}|=={radio}|et{#TOTAL_BOUCLE|>{#GET{max_radios}}})
