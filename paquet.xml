@@ -1,9 +1,9 @@
 <paquet
 	prefix="motsdf"
 	categorie="navigation"
-	version="0.3.5"
+	version="0.4.0"
 	etat="dev"
-	compatibilite="[3.2.1;4.0.*]"
+	compatibilite="[4.0.0-beta;4.0.*]"
 	logo="prive/themes/spip/images/motsdf-64.png"
 	documentation=""
 	schema="1.0.0" 
@@ -19,9 +19,8 @@
 
 	<licence>GNU/GPL</licence>
 
-	<necessite nom="spip_bonux" compatibilite="[3.4.6;]" /> 
-	<utilise nom="saisies" compatibilite="[3.27.7;]" />
-	<utilise nom="rang" compatibilite="[1.0.13;]" />
+	<utilise nom="saisies" compatibilite="[3.54.7;]" />
+	<utilise nom="rang" compatibilite="[2.0.0;]" />
 	<utilise nom="motus" compatibilite="[1.1.7;]" />
 
 	<pipeline nom="autoriser" inclure="motsdf_autorisations.php" /> 

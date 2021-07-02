@@ -90,13 +90,13 @@ function motsdf_formulaire_charger($flux) {
 
 		if (is_numeric($id_objet)) { // c'est une modification. On va chercher les valeurs dans la BdD
 			foreach ($groupes as $groupe) {
-				$champ = slugify($groupe['titre']);
+				$champ = identifiant_slug($groupe['titre']);
 				$liste = sql_allfetsel('M.id_mot', 'spip_mots AS M JOIN spip_mots_liens AS L ON M.id_mot=L.id_mot', "M.id_groupe=".intval($groupe['id_groupe'])." AND L.objet='$objet' AND L.id_objet=".intval($id_objet));
 				$flux['data'][$champ] = array_column($liste, 'id_mot');
 			}
 		} else { // c'est une création (id_objet = 'new/oui'). On récupère les valeurs si elles sont postées (retour de la fonction verifier() par ex.)
 			foreach ($groupes as $groupe) {
-				$champ = slugify($groupe['titre']);
+				$champ = identifiant_slug($groupe['titre']);
 				$flux['data'][$champ] = _request($champ);
 			}
 		}
@@ -164,7 +164,7 @@ function motsdf_formulaire_verifier($flux) {
 					$rubs = picker_selected($restrictions, 'rubrique');
 					if (!$restrictions or in_array($id_parent, $rubs) 
 						and $groupe['obligatoire'] == 'oui') {
-						$champ = slugify($groupe['titre']);
+						$champ = identifiant_slug($groupe['titre']);
 						$categories = _request($champ);
 
 						if (!$categories) {
@@ -180,7 +180,7 @@ function motsdf_formulaire_verifier($flux) {
 		else {
 			foreach ($groupes as $groupe) {
 				if ($groupe['obligatoire'] == 'oui') {
-					$champ = slugify($groupe['titre']);
+					$champ = identifiant_slug($groupe['titre']);
 					$categories = _request($champ);
 					if (!$categories) {
 						$flux['data'][$champ] = _T('motsdf:saisir_choix');
@@ -222,7 +222,7 @@ function motsdf_formulaire_traiter($flux) {
 		sql_delete('spip_mots_liens', "id_objet=".sql_quote($id_objet)." AND objet=".sql_quote($objet));
 
 		foreach ($groupes as $groupe) {
-			$champ = slugify($groupe['titre']);
+			$champ = identifiant_slug($groupe['titre']);
 			$categories = _request($champ);
 
 			if (is_array($categories) AND count($categories) > 0) {

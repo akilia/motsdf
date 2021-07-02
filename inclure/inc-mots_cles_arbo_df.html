@@ -1,7 +1,7 @@
 [(#REM) Compatibilité avec le plugin RANG ][
 (#VAL{mots}|in_array{#RANG_LISTE_OBJETS}|?{#SET{par, rang},#SET{par, #ENV{par, titre}}})]
 
-#SET{name,#ENV{motdf/nom_groupe}|htmlspecialchars_decode{#CONST{ENT_QUOTES}}|slugify}
+#SET{name,#ENV{motdf/nom_groupe}|htmlspecialchars_decode{#CONST{ENT_QUOTES}}|identifiant_slug}
 #SET{id_grp, #ENV{motdf/id_groupe}}
 
 [(#REM) Radio ou Checkbox ? Voir configuration choisie dans le groupe de mot-clés "On ne peut sélectionner qu’un seul mot-clé à la fois dans ce groupe"]
