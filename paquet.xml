@@ -19,9 +19,10 @@
 
 	<licence>GNU/GPL</licence>
 
+	<utilise nom="motus" compatibilite="[1.1.7;]" />
 	<utilise nom="saisies" compatibilite="[3.54.7;]" />
 	<utilise nom="rang" compatibilite="[2.0.0;]" />
-	<utilise nom="motus" compatibilite="[1.1.7;]" />
+	<utilise nom="ajaxfiltre" compatibilite="[1.0.8;]" />
 
 	<pipeline nom="autoriser" inclure="motsdf_autorisations.php" /> 
 	<pipeline nom="editer_contenu_objet" inclure="motsdf_pipelines.php" /> 
